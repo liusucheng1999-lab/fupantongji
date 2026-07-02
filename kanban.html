@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跟进看板 · 战略领导力历史学员</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Noto Sans SC',system-ui,sans-serif;font-size:13px;line-height:1.5;background:#EEF2F8;color:#1C2536}
+
+:root{
+  --nav:#111827;
+  --nav-t:rgba(255,255,255,.62);--nav-t2:rgba(255,255,255,.3);
+  --nav-accent:#4F7AFF;
+  --pri:#3D5AFE;--pri-d:#2A3FE0;--pri-l:#EEF0FF;
+  --bdr:#E4E9F2;--bdr2:#CCD5E5;
+  --bg:#EEF2F8;--sfc:#FFFFFF;
+  --txt:#1C2536;--txt2:#5E6E8A;--txt3:#A0AEBF;
+  --hi:#0D9E5A;--mid:#E07B00;--lo:#D93025;
+}
+
+/* ══ LAYOUT ══ */
+.sidebar{position:fixed;top:0;left:0;width:250px;height:100vh;background:var(--nav);display:flex;flex-direction:column;z-index:100;overflow-y:auto;scrollbar-width:none}
+.sidebar::-webkit-scrollbar{display:none}
+.main{margin-left:250px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* ══ SIDEBAR ══ */
+.sb-brand{display:flex;align-items:center;gap:12px;padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#6689FF 0%,#3D5AFE 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(61,90,254,.4)}
+.sb-logo svg{width:17px;height:17px;fill:#fff}
+.sb-name{font-size:14px;font-weight:700;color:#fff;letter-spacing:.01em;line-height:1.3}
+.sb-sub{font-size:10px;color:var(--nav-t2);margin-top:2px;letter-spacing:.03em}
+.nav-sec{padding:16px 12px 4px}
+.nav-sec-label{font-size:9.5px;font-weight:600;color:var(--nav-t2);letter-spacing:.1em;padding:0 8px 8px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--nav-t);font-size:13px;font-weight:400;transition:all .15s;margin-bottom:1px;position:relative}
+.nav-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(79,122,255,.14);color:#fff;font-weight:500}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--nav-accent);border-radius:0 2px 2px 0}
+.nav-ic{width:16px;height:16px;flex-shrink:0;opacity:.7}
+.nav-item.active .nav-ic{opacity:1}
+.sb-user-sec{padding:10px 16px 14px;margin-top:auto}
+.sb-user-lbl{font-size:9.5px;font-weight:600;color:var(--nav-t2);letter-spacing:.1em;text-transform:uppercase;padding:0 2px;margin-bottom:7px}
+.sb-user-row{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 10px;cursor:pointer;transition:background .15s}
+.sb-user-row:hover{background:rgba(255,255,255,.1)}
+.sb-user-ic{flex-shrink:0;color:rgba(255,255,255,.5)}
+.sb-user-sel{flex:1;appearance:none;-webkit-appearance:none;background:transparent;border:none;color:rgba(255,255,255,.9);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;outline:none;min-width:0}
+.sb-user-sel option{background:#1f2937;color:#fff}
+.sb-user-arrow{flex-shrink:0;color:rgba(255,255,255,.35);pointer-events:none}
+.sb-foot{padding:10px 20px 16px;border-top:1px solid rgba(255,255,255,.05);font-size:11px;color:var(--nav-t2);letter-spacing:.02em}
+
+/* ══ TOPBAR ══ */
+.topbar{height:54px;flex-shrink:0;background:var(--sfc);border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:8px;padding:0 20px;z-index:40;box-shadow:0 1px 0 var(--bdr)}
+.topbar-page{font-size:14px;font-weight:600;color:var(--txt);white-space:nowrap;letter-spacing:.01em}
+.topbar-sep{width:1px;height:16px;background:var(--bdr);flex-shrink:0;margin:0 2px}
+.fg{display:flex;align-items:center;gap:6px}
+.fl{font-size:12px;color:var(--txt3);white-space:nowrap;font-weight:400}
+.fsel,.fdate{height:28px;padding:0 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--sfc);color:var(--txt);font-family:inherit;font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
+.fsel:focus,.fdate:focus{border-color:var(--pri);box-shadow:0 0 0 2px rgba(61,90,254,.12)}
+.fsel-user{min-width:96px;font-weight:600;color:var(--pri);border-color:rgba(61,90,254,.3);background:var(--pri-l)}
+.topbar-r{display:flex;gap:6px;margin-left:auto;align-items:center}
+.btn{height:28px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap;letter-spacing:.01em}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--pri);color:#fff;box-shadow:0 1px 3px rgba(61,90,254,.35)}
+.btn-primary:hover{background:var(--pri-d)}
+.btn-default{background:var(--sfc);color:var(--txt2);border:1px solid var(--bdr)}
+.btn-default:hover{border-color:var(--bdr2);color:var(--txt)}
+.btn-outline{background:var(--sfc);color:var(--pri);border:1px solid rgba(61,90,254,.35)}
+.btn-outline:hover{background:var(--pri-l);border-color:var(--pri)}
+.btn-teal{background:var(--sfc);color:#0A7E6A;border:1px solid rgba(10,126,106,.3)}
+.btn-teal:hover{background:#EDFAF7}
+.btn-teal.active{background:#0A7E6A;color:#fff;border-color:#0A7E6A;box-shadow:0 1px 3px rgba(10,126,106,.3)}
+.btn-meeting{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;border-radius:8px;border:1.5px solid rgba(5,150,105,.3);background:rgba(5,150,105,.07);font-family:inherit;font-size:12.5px;font-weight:600;color:#059669;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-meeting:hover{background:rgba(5,150,105,.14);border-color:#059669}
+.meeting-ov{position:fixed;inset:0;background:rgba(10,15,35,.45);backdrop-filter:blur(4px);z-index:400;opacity:0;pointer-events:none;transition:opacity .22s}
+.meeting-ov.show{opacity:1;pointer-events:all}
+.meeting-modal{position:fixed;top:50%;left:calc(50% + 125px);transform:translate(-50%,-50%) scale(.95);width:440px;background:var(--sfc);border-radius:16px;z-index:401;box-shadow:0 24px 64px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.06);display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:all .24s cubic-bezier(.22,.8,.25,1)}
+.meeting-modal.show{opacity:1;pointer-events:all;transform:translate(-50%,-50%) scale(1)}
+.meeting-mh{padding:18px 20px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.meeting-mtitle{font-size:14px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:7px}
+.meeting-mclose{width:26px;height:26px;border:none;background:var(--bg);cursor:pointer;color:var(--txt2);font-size:14px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.meeting-mclose:hover{background:var(--bdr)}
+.meeting-mb{padding:20px}
+.meeting-field-lbl{font-size:11.5px;font-weight:600;color:var(--txt2);margin-bottom:7px;display:block;letter-spacing:.03em}
+.meeting-input{width:100%;height:38px;padding:0 12px;border:1.5px solid var(--bdr);border-radius:8px;background:#FAFBFD;color:var(--txt);font-family:inherit;font-size:13.5px;outline:none;box-sizing:border-box;transition:border-color .15s}
+.meeting-input:focus{border-color:var(--pri);background:#fff;box-shadow:0 0 0 3px rgba(61,90,254,.1)}
+.meeting-prompt-box{background:linear-gradient(135deg,#ECFDF5 0%,#D1FAE5 100%);border:1.5px solid #6EE7B7;border-radius:12px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:flex-start;gap:12px}
+.meeting-prompt-icon{width:32px;height:32px;background:#059669;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.meeting-prompt-txt{font-size:13px;font-weight:600;color:#065F46;line-height:1.5}
+.meeting-prompt-sub{font-size:11px;color:#059669;margin-top:3px;font-weight:400}
+.meeting-info{border:1px solid var(--bdr);border-radius:10px;overflow:hidden}
+.meeting-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bdr);font-size:12.5px}
+.meeting-info-row:last-child{border-bottom:none}
+.meeting-info-lbl{color:var(--txt2)}
+.meeting-info-val{font-weight:600;color:var(--txt)}
+.meeting-info-val.hi{color:#059669}
+.meeting-mf{padding:12px 20px;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:8px;background:#FAFBFD;border-radius:0 0 16px 16px}
+.btn-gear{height:28px;padding:0 10px;border-radius:6px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;background:var(--sfc);color:var(--txt2);border:1px solid var(--bdr);display:flex;align-items:center;gap:4px;transition:all .15s}
+.btn-gear:hover{border-color:var(--bdr2);color:var(--txt)}
+.btn-gear.active{background:var(--pri-l);color:var(--pri);border-color:rgba(61,90,254,.4)}
+
+/* ══ COUNTDOWN ══ */
+.countdown{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--txt3);padding:3px 10px;border-radius:6px;background:rgba(0,0,0,.04);border:1px solid var(--bdr);white-space:nowrap}
+.countdown.warn{color:var(--lo);background:rgba(220,38,38,.06);border-color:rgba(220,38,38,.18)}
+.countdown.near{color:var(--mid);background:rgba(217,119,6,.06);border-color:rgba(217,119,6,.18)}
+.cd-dot{width:5px;height:5px;border-radius:50%;background:var(--txt3);flex-shrink:0;animation:cdpulse 2s ease infinite}
+.countdown.warn .cd-dot{background:var(--lo)}.countdown.near .cd-dot{background:var(--mid)}
+@keyframes cdpulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ══ TABLE AREA ══ */
+.table-area{flex:1;overflow:hidden;display:flex;flex-direction:column;padding:14px}
+.table-card{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--sfc);border-radius:12px;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05)}
+.table-scroll{overflow:auto;flex:1}
+.table-scroll::-webkit-scrollbar{width:6px;height:6px}
+.table-scroll::-webkit-scrollbar-track{background:transparent}
+.table-scroll::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+.table-scroll::-webkit-scrollbar-thumb:hover{background:#B0BDD0}
+
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+
+/* ══ TABLE HEADER ══ */
+thead{position:sticky;top:0;z-index:30}
+
+/* Category row — unified clean style, color via top border only */
+.th-cat{
+  padding:0 12px;height:32px;text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.06em;white-space:nowrap;
+  background:#F8FAFB;color:var(--txt2);
+  border-bottom:1px solid var(--bdr);border-right:1px solid var(--bdr);
+  text-transform:uppercase;
+}
+.th-cat.c-xin   {border-top:2px solid #10B981;color:#047857}
+.th-cat.c-lao   {border-top:2px solid #3D5AFE;color:#2A3FE0}
+.th-cat.c-zhuB  {border-top:2px solid #8B5CF6;color:#6D28D9}
+.th-cat.c-zhuA  {border-top:2px solid #F59E0B;color:#B45309}
+.th-cat.c-chang {border-top:2px solid #06B6D4;color:#0E7490}
+.th-cat.c-duan  {border-top:2px solid #EF4444;color:#B91C1C}
+.th-cat.c-gj    {border-top:2px solid #D97706;color:#92400E}
+.th-cat.c-fen   {border-top:2px solid #14B8A6;color:#0F766E}
+.th-cat.c-strat {border-top:2px solid #60A5FA;color:#1D4ED8}
+.th-cat.c-supp  {border-top:2px solid #FB923C;color:#C2410C}
+.th-cat.c-guide {border-top:2px solid #34D399;color:#065F46}
+.th-cat.c-other {border-top:2px solid #94A3B8;color:#475569;background:#F8FAFC}
+
+/* Field row */
+.th-field{
+  padding:0 10px;height:28px;text-align:center;font-size:11px;font-weight:500;white-space:nowrap;
+  border-bottom:1px solid var(--bdr);border-right:1px solid rgba(228,233,242,.7);
+  background:#F8FAFB;color:var(--txt3);
+}
+.th-field.is-def{color:var(--txt2);font-weight:600;background:#F8FAFB}
+
+/* Sticky org column header */
+.th-name-wrap{
+  position:sticky;left:0;z-index:40;
+  background:#F8FAFB;border-right:1px solid var(--bdr);
+  min-width:250px;width:250px;
+  border-top:2px solid transparent;
+  border-bottom:1px solid var(--bdr);
+}
+.th-name-inner{padding:6px 14px 4px;color:var(--txt2);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.exp-row{display:flex;gap:3px;align-items:center;padding:0 10px 5px;flex-wrap:nowrap}
+.exp-btn{font-size:10px;padding:1px 6px;border-radius:8px;cursor:pointer;background:#fff;color:var(--txt2);border:1px solid var(--bdr);transition:all .12s;font-family:inherit;font-weight:500;white-space:nowrap}
+.exp-btn:hover{background:var(--pri-l);color:var(--pri);border-color:rgba(61,90,254,.3)}
+
+/* ══ ROWS ══ */
+@keyframes rowIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.row-in{animation:rowIn .14s ease-out}
+.row-hide{display:none!important}
+
+/* Minimal row backgrounds — almost all white, very subtle */
+.rl0 td{background:#FFFDF5!important}
+.rl1 td{background:#F9FBFF!important}
+.rl2 td{background:#FAFBFD!important}
+.rl3 td{background:#FCFCFF!important}
+.rl4 td{background:#FDFEFF!important}
+.rl5 td{background:#FFFFFF!important}
+
+.row-anc td{opacity:.5}
+tbody tr:hover td{filter:brightness(.97);transition:filter .1s}
+td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,233,242,.5);vertical-align:middle}
+
+/* Number cells — monospace for alignment */
+.td-num{text-align:right;padding:5px 14px;font-family:'DM Mono',monospace;font-size:12px;font-weight:400;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.td-num.iz{color:var(--txt3)}.td-num.id{color:var(--txt3);text-align:center;font-family:inherit;font-size:13px}
+.td-num.hi{color:var(--hi);font-weight:500}
+.td-num.mid{color:var(--mid);font-weight:500}
+.td-num.lo{color:var(--lo);font-weight:500}
+
+/* Text field cells */
+.td-txt{text-align:left;padding:5px 10px;font-size:12px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:130px;max-width:180px;cursor:default}
+.td-txt.empty{color:var(--txt3);text-align:center}
+.td-txt-na{text-align:center;padding:5px 10px;color:var(--txt3);font-size:13px}
+.th-field.is-txt{min-width:140px;text-align:left;padding-left:12px}
+
+/* Field tip icon */
+.th-tip{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(0,0,0,.12);color:inherit;font-size:9px;font-weight:700;font-style:normal;cursor:default;margin-left:4px;flex-shrink:0;vertical-align:middle;opacity:.7;font-family:inherit}
+.th-tip:hover{opacity:1;background:rgba(0,0,0,.22)}
+/* singleton JS tooltip */
+#fld-tip{position:fixed;background:#1E293B;color:#F1F5F9;font-size:11.5px;font-weight:400;line-height:1.6;padding:7px 12px;border-radius:8px;white-space:pre-wrap;max-width:220px;pointer-events:none;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.28);display:none;font-family:inherit}
+
+/* Percentage pill style */
+.td-num.hi,.td-num.mid,.td-num.lo{display:block;font-size:11.5px}
+
+/* Progress bar for pct fields */
+.pct-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 10px;width:100%;box-sizing:border-box}
+.pct-num{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.pct-num.hi{color:var(--hi)}.pct-num.mid{color:var(--mid)}.pct-num.lo{color:var(--lo)}.pct-num.id{color:var(--txt3)}
+.pct-track{width:100%;height:4px;border-radius:2px;background:rgba(0,0,0,.07);overflow:hidden}
+.pct-fill{height:100%;border-radius:2px}
+.pct-fill.hi{background:var(--hi)}.pct-fill.mid{background:var(--mid)}.pct-fill.lo{background:var(--lo)}
+.td-num-bar{position:relative;display:flex;align-items:center;justify-content:flex-end;padding:2px 8px 2px 4px;overflow:hidden;min-height:28px;width:100%;box-sizing:border-box}
+.td-bar-fill{position:absolute;left:0;top:50%;transform:translateY(-50%);height:60%;border-radius:0 3px 3px 0;opacity:.18;pointer-events:none;transition:width .3s ease;}
+.td-bar-fill.hi{background:var(--hi);opacity:.28;}.td-bar-fill.mid{background:var(--mid);opacity:.28;}.td-bar-fill.lo{background:var(--lo);opacity:.3;}
+
+/* Sticky name cell */
+.td-name-wrap{
+  position:sticky;left:0;z-index:10;
+  min-width:250px;width:250px;
+  border-right:1px solid var(--bdr)!important;
+}
+.td-name-inner{display:flex;align-items:center;gap:6px;padding:5px 12px;overflow:hidden;max-width:250px}
+.tog{flex-shrink:0;width:16px;height:16px;border-radius:4px;border:1px solid;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;transition:all .12s;line-height:1;background:#fff;font-weight:700}
+.tog:hover{opacity:.7}.tog.leaf{visibility:hidden;pointer-events:none}
+.lv-bar{width:2px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:12px;opacity:.7}
+.row-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.row-tag{flex-shrink:0;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600;letter-spacing:.03em}
+
+/* Row label styles per level */
+.rl0 .row-lbl{color:#6B4D00;font-size:13px;font-weight:700;letter-spacing:.01em}
+.rl1 .row-lbl{color:#1C2536;font-size:13px;font-weight:600}
+.rl2 .row-lbl{color:#2D3A55;font-weight:500}
+.rl3 .row-lbl{color:#3D4E68;font-weight:400}
+.rl4 .row-lbl{color:#5A6A82;font-weight:400}
+.rl4 .row-tag{background:#FFF0FA;color:#9D174D}
+.rl5 .row-lbl{color:var(--txt3);font-weight:400}
+.rl5 .row-tag{background:#F5F5F5;color:#999}
+
+/* Row tags */
+.rl0 .row-tag{background:#FEF3C7;color:#92400E}
+.rl1 .row-tag{background:#EEF0FF;color:#3D5AFE}
+.rl2 .row-tag{background:#F0F3FF;color:#4C62C8}
+.rl3 .row-tag{background:#F0FDF9;color:#059669}
+.rl4 .row-tag{background:#FFF4ED;color:#C4571A}
+.rl5 .row-tag{background:#F5F5F5;color:#888}
+
+/* ══ COL SETTINGS PANEL ══ */
+.col-overlay{position:fixed;inset:0;background:rgba(17,24,39,.25);backdrop-filter:blur(1px);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.col-overlay.show{opacity:1;pointer-events:all}
+.col-panel{position:fixed;top:0;right:0;width:320px;height:100vh;background:var(--sfc);z-index:201;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.1);transform:translateX(100%);transition:transform .24s cubic-bezier(.22,.8,.25,1)}
+.col-panel.show{transform:translateX(0)}
+.panel-head{padding:18px 20px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.panel-title{font-size:14px;font-weight:600;color:var(--txt);flex:1;letter-spacing:.01em}
+.panel-sel-all{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--pri-l);color:var(--pri);border:1px solid rgba(61,90,254,.25);cursor:pointer;font-family:inherit;font-weight:600;white-space:nowrap;transition:all .15s}
+.panel-sel-all:hover{background:#DDE2FF}
+.panel-close{width:26px;height:26px;border:none;background:var(--bg);cursor:pointer;color:var(--txt2);font-size:14px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.panel-close:hover{background:var(--bdr)}
+.panel-body{flex:1;overflow-y:auto;padding:8px 12px}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+.pg-group{margin-bottom:10px}
+.pg-gh{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;border-radius:7px;margin-bottom:2px;font-size:11.5px;font-weight:600;cursor:pointer;user-select:none}
+.pg-gh:hover{filter:brightness(.96)}.pg-gh.disabled{cursor:default;opacity:.5}
+.pg-ta{font-size:10px;padding:1px 7px;border-radius:10px;cursor:pointer;opacity:.8;background:rgba(0,0,0,.07)}
+.pg-field{display:flex;align-items:center;gap:8px;padding:3px 10px 3px 18px;border-radius:6px;cursor:pointer;transition:background .1s}
+.pg-field:hover{background:#F4F6FA}.pg-field.disabled{cursor:default;opacity:.5}
+.pg-field input[type=checkbox]{width:13px;height:13px;accent-color:var(--pri);cursor:pointer;flex-shrink:0}
+.pg-field.disabled input{cursor:default}
+.pg-fn{font-size:12px;color:var(--txt)}
+.pg-def{font-size:9px;padding:1px 5px;border-radius:8px;background:var(--pri-l);color:var(--pri);font-weight:600;margin-left:auto;letter-spacing:.02em}
+.panel-foot{padding:12px 16px;border-top:1px solid var(--bdr);display:flex;gap:8px;flex-shrink:0}
+.panel-foot .btn{height:32px;flex:1;justify-content:center}
+.pg-other-section{border:1.5px solid #CBD5E1;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.pg-other-hd{padding:6px 10px;font-size:11px;font-weight:700;color:#475569;background:#F1F5F9;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #E2E8F0}
+.pg-other-body .pg-group{margin-bottom:0}
+.pg-other-body .pg-group:not(:last-child){border-bottom:1px solid var(--bdr)}
+
+/* ══ TARGET MODAL ══ */
+
+/* toast */
+#toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:13px;font-family:inherit;z-index:999;transition:opacity .3s;display:none;font-weight:500}
+
+/* custom instant tooltip */
+#row-tip{position:fixed;pointer-events:none;z-index:9999;background:#1C2536;color:#fff;font-size:12px;padding:5px 10px;border-radius:6px;white-space:pre-wrap;max-width:320px;line-height:1.5;box-shadow:0 4px 12px rgba(0,0,0,.25);opacity:0;transition:opacity .08s;font-family:'Noto Sans SC',sans-serif}
+
+/* ══ MULTI-COURSE PICKER ══ */
+.course-picker{position:relative;display:inline-flex;align-items:center}
+.course-sel-btn{height:28px;padding:0 8px 0 11px;border:1px solid var(--bdr);border-radius:6px;background:var(--sfc);color:var(--txt);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px;min-width:158px;transition:border-color .15s;outline:none;white-space:nowrap;overflow:hidden}
+.course-sel-btn:hover,.course-sel-btn.open{border-color:var(--pri)}
+.course-sel-btn.open{box-shadow:0 0 0 2px rgba(61,90,254,.12)}
+.course-sel-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;text-align:left}
+.course-count-badge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--pri);color:#fff;font-size:9.5px;font-weight:700;flex-shrink:0;vertical-align:middle}
+.course-arrow{flex-shrink:0;transition:transform .15s;color:var(--txt3);margin-left:auto}
+.course-sel-btn.open .course-arrow{transform:rotate(180deg)}
+.course-drop{position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:var(--sfc);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:600;padding:6px;display:none}
+.course-drop.show{display:block;animation:dropIn .12s ease-out}
+@keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.course-drop-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .1s;user-select:none}
+.course-drop-item:hover{background:#F4F6FA}
+.course-drop-item input[type=checkbox]{width:13px;height:13px;cursor:pointer;flex-shrink:0;accent-color:var(--pri)}
+.course-drop-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.course-drop-name{font-size:12.5px;color:var(--txt);font-weight:400;flex:1}
+.course-drop-divider{height:1px;background:var(--bdr);margin:4px 0}
+.course-drop-sel-all{width:100%;padding:5px 10px;border-radius:7px;background:none;border:none;font-family:inherit;font-size:11.5px;color:var(--pri);cursor:pointer;text-align:left;font-weight:500;transition:background .1s}
+.course-drop-sel-all:hover{background:var(--pri-l)}
+
+/* ══ MULTI-COURSE TABLE HEADER ══ */
+.th-course{padding:5px 12px;text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.03em;white-space:nowrap;border-bottom:1px solid var(--bdr)}
+.th-sep td,.th-sep-h{border-right:2px solid var(--bdr2)!important}
+
+/* ══ Text-field cell ══ */
+.td-tc{padding:6px 11px;cursor:pointer;min-width:140px;max-width:200px}
+.td-tc-txt{font-size:12px;color:var(--txt2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-all}
+.td-tc-sub{font-size:10px;color:var(--pri);margin-top:3px;opacity:0;transition:opacity .1s;font-weight:500;letter-spacing:.01em}
+td:hover .td-tc-sub{opacity:1}
+.td-tc-add{font-size:12px;color:var(--txt3);text-align:center;cursor:pointer;padding:6px 11px;min-width:140px;display:block}
+.td-tc-add:hover{color:var(--pri)}
+
+/* ══ INLINE EDITOR ══ */
+#ied{position:fixed;z-index:350;width:310px;background:var(--sfc);border:1.5px solid var(--pri);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.18),0 0 0 1px rgba(61,90,254,.08);display:none;flex-direction:column;animation:ied-in .15s ease}
+#ied.show{display:flex}
+@keyframes ied-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.ied-head{padding:9px 12px 8px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--bdr)}
+.ied-label{font-size:12px;font-weight:700;color:var(--txt);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ied-period{font-size:10px;padding:2px 7px;border-radius:6px;background:var(--pri);color:#fff;font-weight:600;flex-shrink:0}
+.ied-x{width:20px;height:20px;border:none;background:none;cursor:pointer;color:var(--txt3);font-size:13px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+.ied-x:hover{background:var(--bdr);color:var(--txt)}
+.ied-body{padding:10px 12px 8px;display:flex;flex-direction:column;gap:8px}
+.ied-ta{width:100%;min-height:92px;padding:8px 10px;border:1.5px solid var(--bdr);border-radius:7px;font-family:'Noto Sans SC',sans-serif;font-size:12.5px;color:var(--txt);line-height:1.65;resize:vertical;outline:none;background:#FAFBFD;transition:border-color .15s;box-sizing:border-box}
+.ied-ta:focus{border-color:var(--pri);background:#fff;box-shadow:0 0 0 2px rgba(61,90,254,.08)}
+.ied-btns{display:flex;justify-content:flex-end;gap:6px}
+.ied-save{height:28px;padding:0 16px;border-radius:6px;background:var(--pri);color:#fff;border:none;font-family:inherit;font-size:12px;cursor:pointer;font-weight:500}
+.ied-save:hover{background:var(--pri-d)}
+.ied-cancel{height:28px;padding:0 12px;border-radius:6px;background:var(--bg);color:var(--txt2);border:1px solid var(--bdr);font-family:inherit;font-size:12px;cursor:pointer}
+.ied-cancel:hover{background:var(--bdr)}
+.ied-hist{border-top:1px solid var(--bdr);padding:8px 12px 10px;max-height:160px;overflow-y:auto}
+.ied-hist::-webkit-scrollbar{width:3px}.ied-hist::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+.ied-hist-hd{font-size:9.5px;color:var(--txt3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.ied-hist-hd::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.ied-hist-item{padding:6px 9px;border-radius:7px;border:1px solid var(--bdr);margin-bottom:5px;background:#FAFBFD}
+.ied-hist-item:last-child{margin-bottom:0}
+.ied-hi-name{font-size:10.5px;font-weight:600;color:var(--txt2);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.ied-hi-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ied-hi-txt{font-size:11.5px;color:var(--txt2);line-height:1.55;white-space:pre-wrap}
+
+/* ══ TABLE CARD TOOLBAR ══ */
+.tc-head{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--bdr);flex-shrink:0;background:#FAFBFD}
+.tc-area-btn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 15px;border-radius:8px;border:1.5px solid var(--bdr2);background:#fff;font-family:inherit;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tc-area-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-l)}
+.tc-area-btn.active{background:#0A7E6A;color:#fff;border-color:#0A7E6A;box-shadow:0 1px 6px rgba(10,126,106,.28)}
+.tc-area-btn.active:hover{background:#087A68}
+</style>
+</head>
+<body>
+
+<!-- ════ SIDEBAR ════ -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm13 0a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/></svg>
+    </div>
+    <div><div class="sb-name">跟进看板</div><div class="sb-sub">CRM 管理系统</div></div>
+  </div>
+  <div class="nav-sec">
+    <div class="nav-item active">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      复盘统计
+    </div>
+  </div>
+  <div class="sb-user-sec">
+    <div class="sb-user-lbl">当前用户</div>
+    <div class="sb-user-row" onclick="this.querySelector('select').focus()">
+      <svg class="sb-user-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <select class="sb-user-sel" id="curUserSel" onchange="setCurUser(this.value)"></select>
+      <svg class="sb-user-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+  <div class="sb-foot">战略领导力项目 · 2026</div>
+</aside>
+
+<!-- ════ MAIN ════ -->
+<div class="main">
+  <header class="topbar">
+    <span class="topbar-page">复盘统计</span>
+    <span class="topbar-sep"></span>
+    <div class="fg"><span class="fl">跟进项目</span>
+      <div class="course-picker" id="coursePicker">
+        <button class="course-sel-btn" id="courseSelBtn" onclick="toggleCourseDrop(event)">
+          <span class="course-sel-txt" id="courseSelTxt">战略领导力第20期</span>
+          <svg class="course-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="course-drop" id="courseDrop">
+          <button class="course-drop-sel-all" onclick="toggleAllCourses()">全选 / 取消全选</button>
+          <div class="course-drop-divider"></div>
+          <div id="courseDropItems"></div>
+        </div>
+      </div>
+      <div class="countdown" id="countdown"><span class="cd-dot"></span><span id="countdownTxt"></span></div>
+    </div>
+    <div class="topbar-r">
+      <button class="btn-meeting" onclick="openMeetingInput()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+        开启会议
+      </button>
+      <button class="btn btn-primary" onclick="showToast('查询成功','#1D6FCA')">查询</button>
+      <button class="btn btn-default" onclick="showToast('已重置','#64748B')">重置</button>
+      <button class="btn btn-default" onclick="showToast('正在导出…','#059669')">导出</button>
+      <button class="btn btn-default" onclick="document.getElementById('refTargetInput').click()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上传参考目标
+      </button>
+      <input type="file" id="refTargetInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleRefTargetUpload(this)">
+      <button class="btn-gear" id="settingsBtn" onclick="openColPanel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        列设置
+      </button>
+    </div>
+  </header>
+  <div class="table-area">
+    <div class="table-card">
+      <div class="tc-head">
+        <button class="tc-area-btn" id="myAreaBtn" onclick="toggleMyAreas()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="ma-label">只看我负责的地区</span>
+        </button>
+      </div>
+      <div class="table-scroll" id="tableScroll">
+        <table id="mainTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ COL SETTINGS ════ -->
+<div class="col-overlay" id="colOverlay" onclick="closeColPanel(false)"></div>
+<div class="col-panel" id="colPanel">
+  <div class="panel-head">
+    <span class="panel-title">列字段设置</span>
+    <button class="panel-sel-all" id="selAllBtn" onclick="toggleSelectAll()">全选所有指标</button>
+    <button class="panel-close" onclick="closeColPanel(false)">✕</button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+  <div class="panel-foot">
+    <button class="btn btn-default" onclick="resetColDefaults()">重置默认</button>
+    <button class="btn btn-primary" onclick="closeColPanel(true)">确认应用</button>
+  </div>
+</div>
+
+<!-- ════ MEETING MODALS ════ -->
+<div class="meeting-ov" id="meetingOv" onclick="closeMeetingModals()"></div>
+
+<div class="meeting-modal" id="meetingInputModal">
+  <div class="meeting-mh">
+    <span class="meeting-mtitle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+      开启会议
+    </span>
+    <button class="meeting-mclose" onclick="closeMeetingModals()">✕</button>
+  </div>
+  <div class="meeting-mb">
+    <label class="meeting-field-lbl">会议名称</label>
+    <input class="meeting-input" id="meetingNameInput" placeholder="请输入会议名称…" onkeydown="if(event.key==='Enter')confirmMeetingName()">
+  </div>
+  <div class="meeting-mf">
+    <button class="btn btn-default" style="height:34px;padding:0 18px" onclick="closeMeetingModals()">取消</button>
+    <button class="btn btn-primary" style="height:34px;padding:0 22px;background:#059669;border-color:#059669" onclick="confirmMeetingName()">确定</button>
+  </div>
+</div>
+
+<div class="meeting-modal" id="meetingSummaryModal">
+  <div class="meeting-mh">
+    <span class="meeting-mtitle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+      会议已创建
+    </span>
+    <button class="meeting-mclose" onclick="closeMeetingModals()">✕</button>
+  </div>
+  <div class="meeting-mb">
+    <div class="meeting-prompt-box">
+      <div class="meeting-prompt-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+      </div>
+      <div>
+        <div class="meeting-prompt-txt">立即调起润泽园电脑应用，开启一个会议</div>
+        <div class="meeting-prompt-sub">请确认电脑已安装润泽园客户端</div>
+      </div>
+    </div>
+    <div class="meeting-info">
+      <div class="meeting-info-row"><span class="meeting-info-lbl">会议名称</span><span class="meeting-info-val" id="mSum-name">—</span></div>
+      <div class="meeting-info-row"><span class="meeting-info-lbl">开始时间</span><span class="meeting-info-val" id="mSum-time">—</span></div>
+      <div class="meeting-info-row"><span class="meeting-info-lbl">会议时长</span><span class="meeting-info-val">2 小时</span></div>
+      <div class="meeting-info-row"><span class="meeting-info-lbl">云录制</span><span class="meeting-info-val hi">自动开启</span></div>
+      <div class="meeting-info-row"><span class="meeting-info-lbl">会议分类</span><span class="meeting-info-val">成长顾问会议</span></div>
+      <div class="meeting-info-row"><span class="meeting-info-lbl">重复</span><span class="meeting-info-val">不重复</span></div>
+    </div>
+  </div>
+  <div class="meeting-mf">
+    <button class="btn btn-default" style="height:34px;padding:0 18px" onclick="closeMeetingModals()">关闭</button>
+  </div>
+</div>
+
+<!-- ════ INLINE EDITOR ════ -->
+<div id="ied">
+  <div class="ied-head">
+    <span class="ied-label" id="ied-label"></span>
+    <span class="ied-period" id="ied-period"></span>
+    <button class="ied-x" onclick="closeInlineEd(true)">✕</button>
+  </div>
+  <div class="ied-body">
+    <textarea class="ied-ta" id="ied-ta" onkeydown="if((event.metaKey||event.ctrlKey)&&event.key==='Enter')saveInlineEd()"></textarea>
+    <div class="ied-btns">
+      <button class="ied-cancel" onclick="closeInlineEd(true)">取消</button>
+      <button class="ied-save" onclick="saveInlineEd()">保存</button>
+    </div>
+  </div>
+  <div class="ied-hist" id="ied-hist" style="display:none"></div>
+</div>
+
+<div id="toast"></div>
+<div id="row-tip"></div>
+<div id="fld-tip"></div>
+
+<script>
+/* ══ METRIC GROUPS ══ */
+const MG = [
+  {id:'xin',    name:'正价学员',    cls:'c-xin',    fgBg:'#EBF7F0', fgColor:'#15803D',
+   fields:[
+    {id:'ref',        name:'参考目标',           def:false, tip:'运营配置，说明来源'},
+    {id:'target',     name:'目标',               def:true,  tip:'项目管理顾问填写'},
+    {id:'done',       name:'报名完成',           def:true,  tip:'正价有效报名量，含转移转赠（不计算赠送单，不包含润泽园公司内部购买的优惠单）完成量计算为下单人所在服务省市'},
+    {id:'rate',       name:'报名完成率',         def:true,  pct:true, tip:'完成 / 目标'},
+    {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
+    {id:'estNew',     name:'预估完成',           def:true,  tip:'长名单*0.2+短名单*0.5+带新量*0.8'},
+    {id:'dxTotal',    name:'长短名单（包含带新）', def:false, tip:'长名单带新量+短名单带新量+关键人带新量+无关键人关系的长名单短名单带新量'},
+    {id:'act',        name:'未激活人数',         def:false, tip:'完成量-有权限正价学员数'},
+    {id:'actRate',    name:'激活率',             def:false, pct:true, tip:'激活数 / 完成量'},
+    {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+    {id:'changCnt',   name:'长名单人数',         def:true,  tip:'长名单人数，支持点击跳转'},
+    {id:'changEnroll',name:'长名单正价报名数',   def:false, tip:'长名单中报名正价课学员数（含转移转赠）'},
+    {id:'changRate',  name:'长名单转化率',       def:false, pct:true, tip:'长名单正价报名数/长名单单数'},
+    {id:'duanCnt',    name:'短名单人数',         def:true,  tip:'短名单人数，支持点击跳转'},
+    {id:'duanEnroll', name:'短名单正价报名数',   def:false, tip:'短名单中报名正价课学员数（含转移转赠）'},
+    {id:'duanRate',   name:'短名单转化率',       def:false, pct:true, tip:'短名单正价报名数/短名单人数'},
+    {id:'gjCnt',      name:'关键人数',           def:true,  tip:'关键人数，支持点击跳转'},
+    {id:'gjNew',      name:'关键人带新',         def:false, tip:'关键人带来的新学员数量'},
+    {id:'gjNrate',    name:'关键人带新转化率',   def:false, pct:true, tip:'关键人带新学员中报名正价课数/长短名单中有关键人关系学员数'},
+   ]},
+  {id:'lao',    name:'升班学员',    cls:'c-lao',    fgBg:'#EBF0FF', fgColor:'#1E40AF',
+   fields:[
+    {id:'target',     name:'目标',               def:false, tip:'项目管理顾问填写'},
+    {id:'done',       name:'完成',               def:true,  tip:'非正价下购买量（不包含赠送单）'},
+    {id:'rate',       name:'完成率',             def:true,  pct:true, tip:'完成 / 目标'},
+    {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
+    {id:'estNew',     name:'预估带新量',         def:true,  tip:'基于历史转化率预估的带新人数'},
+    {id:'oldStu',     name:'往期老学员',         def:false, tip:'非正价历史已购学员数'},
+    {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+   ]},
+  {id:'zhuA',   name:'主会场A',     cls:'c-zhuA',   fgBg:'#FDF4EB', fgColor:'#B45309',
+   fields:[
+    {id:'done',       name:'完成',               def:false, tip:'审核到主会场A且有课程权限数'},
+    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
+    {id:'target',     name:'目标',               def:false},
+    {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
+    {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到主会场A且有课程权限且缴纳会务费数'},
+    {id:'sign',       name:'签到数',             def:false},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+   ]},
+  {id:'fen',    name:'本省分会场',  cls:'c-fen',    fgBg:'#F0FDFA', fgColor:'#0F766E',
+   fields:[
+    {id:'done',       name:'完成',               def:false},
+    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
+    {id:'target',     name:'目标',               def:false},
+    {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
+    {id:'fee',        name:'缴纳会务费数',       def:false},
+    {id:'sign',       name:'签到数',             def:false},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+   ]},
+  {id:'strategy',name:'当前策略',   isOther:true, cls:'c-strat', fgBg:'#EFF6FF', fgColor:'#1D4ED8',
+   levelOnly:'person',
+   fields:[{id:'val',name:'当前策略',def:true,isText:true,tip:'当前阶段的策略。超过最后一个阶段的时间显示最后一个阶段所填写的策略。点击可以查看所有阶段的策略。必须设置阶段才可编辑和显示。'}]},
+  {id:'support', name:'需要支持',   isOther:true, cls:'c-supp',  fgBg:'#FFF7ED', fgColor:'#C2410C',
+   levelOnly:'person',
+   fields:[{id:'val',name:'需要支持',def:true,isText:true,tip:'当前阶段的支持需求。超过最后一个阶段的时间显示最后一个阶段所填写的内容。点击可以查看所有阶段的内容。必须设置阶段才可编辑和显示。'}]},
+  {id:'guide',   name:'指导建议',   isOther:true, cls:'c-guide', fgBg:'#F0FDF4', fgColor:'#065F46',
+   levelOnly:'province',
+   fields:[{id:'val',name:'指导建议',def:true,isText:true,tip:'只对省份维度支持进行编辑指导建议。'}]},
+];
+
+/* ══ COURSES ══ */
+const COURSES = [
+  {id:'strat20',  name:'战略领导力第20期', color:'#3D5AFE', bg:'#EEF0FF'},
+  {id:'moment',   name:'经典一刻',          color:'#7C3AED', bg:'#F3EEFF'},
+  {id:'al100',    name:'案例100',            color:'#0891B2', bg:'#ECFEFF'},
+  {id:'strat1',   name:'战略一号班',         color:'#D97706', bg:'#FFFBEB'},
+  {id:'chuang36', name:'共创会36号班',       color:'#059669', bg:'#ECFDF5'},
+];
+/* Deterministic per-course scale factors: cnt=count multiplier, rAdj=rate adjustment */
+const COURSE_SCALES = {
+  strat20:  {cnt:1.00, rAdj: 0.00},
+  moment:   {cnt:0.48, rAdj:-0.07},
+  al100:    {cnt:0.65, rAdj: 0.04},
+  strat1:   {cnt:0.35, rAdj:-0.10},
+  chuang36: {cnt:0.72, rAdj: 0.02},
+};
+let selectedCourses = new Set(['strat20']);
+
+/* ══ SOURCE DATA ══ */
+const RAW = {
+  m:{},
+  groups:[
+    {name:'天火同人', m:{}, provinces:[
+      {name:'江西省',          m:{'xin.done':6},   ps:['丁上海','万晓辉']},
+      {name:'广西壮族自治区',  m:{'xin.done':7},   ps:['张湘玲','邓冬菊']},
+      {name:'香港特别行政区',  m:{'xin.done':3},   ps:['郑保川']},
+      {name:'澳门特别行政区',  m:{'xin.done':2},   ps:['郑保川']},
+      {name:'台湾省',          m:{'xin.done':1},   ps:['郑保川']},
+      {name:'广东省',          m:{}, cg:[
+        {name:'广州，肇庆，清远，云浮',             m:{'xin.done':31}, ps:['孙峥嵘','黄慈航']},
+        {name:'深圳，潮州，汕头，揭阳，梅州，汕尾', m:{'xin.done':14}, ps:['罗元雪','邓冬菊']},
+        {name:'佛山，珠海，江门，中山，阳江',        m:{'xin.done':8},  ps:['刘奕']},
+        {name:'惠州，茂名',                          m:{'xin.done':2},  ps:['易爱丽']},
+        {name:'东莞，河源，韶关，湛江',              m:{'xin.done':16}, ps:['张湘玲','易爱丽']},
+      ]},
+      {name:'新疆维吾尔自治区',m:{'xin.done':4},   ps:['郑保川']},
+      {name:'海南省',          m:{'xin.done':3},   ps:['刘奕']},
+    ]},
+    {name:'笃志力行', m:{'xin.done':0}, provinces:[]},
+    {name:'厚德载物', m:{}, provinces:[
+      {name:'江苏省', m:{}, cg:[
+        {name:'淮安市，盐城市，南通市',         m:{'xin.done':2},  ps:['郑博文']},
+        {name:'苏州市，无锡市，常州市，镇江市', m:{'xin.done':12}, ps:['石喜红']},
+        {name:'宿迁市，扬州市，泰州市',         m:{'xin.done':4},  ps:['朱小英']},
+        {name:'徐州市，南京市，连云港市',       m:{'xin.done':20}, ps:['鹿翠侠']},
+      ]},
+      {name:'东三省', m:{'xin.done':7}, ps:['竭玉静']},
+    ]},
+    {name:'山天大畜', m:{}, provinces:[
+      {name:'宁甘青',       m:{'xin.done':12}, ps:['刘秀','吴洁']},
+      {name:'河南省',       m:{}, cg:[
+        {name:'周口、南阳、信阳、商丘、驻马店、许昌、开封、漯河', m:{'xin.done':9},  ps:['高林旭']},
+        {name:'新乡市，焦作市，济源市，安阳市，濮阳市，鹤壁市',   m:{'xin.done':7},  ps:['郑海霞']},
+        {name:'郑州、平顶山、洛阳，三门峡',                       m:{'xin.done':16}, ps:['岳克培']},
+      ]},
+      {name:'陕西省',       m:{'xin.done':7},  ps:['刘倩茹','张青彬']},
+      {name:'内蒙古自治区', m:{'xin.done':3},  ps:['韩娟']},
+    ]},
+    {name:'尽锐出战', m:{}, provinces:[
+      {name:'浙江省', m:{}, cg:[
+        {name:'宁波，绍兴，舟山', m:{'xin.done':33}, ps:['刘秀','厉有洲']},
+        {name:'杭州，嘉兴，湖州', m:{}, sub:[
+          {name:'嘉兴、湖州架构', m:{'xin.done':18}, ps:['杨佳帅','葛文香']},
+          {name:'杭州架构',       m:{'xin.done':23}, ps:[]},
+        ]},
+        {name:'温州，丽水，台州', m:{'xin.done':4},  ps:['伍杜娟','杨志宇']},
+        {name:'金华，衢州，义乌', m:{'xin.done':12}, ps:['庞玉梅']},
+      ]},
+      {name:'福建省', m:{'xin.done':12}, ps:['李明严','杨志宇']},
+      {name:'上海市', m:{'xin.done':3},  ps:['杨志宇','葛文香']},
+    ]},
+    {name:'自强不息', m:{}, provinces:[
+      {name:'安徽省', m:{}, cg:[
+        {name:'黄山市，马鞍山，安庆，宣城，池州，芜湖', m:{'xin.done':18}, ps:['解硕葆']},
+        {name:'合肥，滁州，六安，铜陵',                 m:{'xin.done':7},  ps:['范杰']},
+        {name:'亳州、阜阳、淮北、淮南、宿州、蚌埠',     m:{'xin.done':7},  ps:['韩开丰']},
+      ]},
+      {name:'湖北省', m:{'xin.done':37}, ps:['朱妍']},
+      {name:'湖南省', m:{}, cg:[
+        {name:'长沙、岳阳、常德、邵阳、湘潭、怀化、娄底、湘西、张家界、益阳', m:{'xin.done':27}, ps:['曾严']},
+        {name:'衡阳、株洲、永州、郴州', m:{}, sub:[
+          {name:'株洲架构',           m:{'xin.done':15}, ps:[]},
+          {name:'衡阳、永州、郴州架构', m:{'xin.done':20}, ps:['蒋祥']},
+        ]},
+      ]},
+    ]},
+    {name:'弘毅致远', m:{}, provinces:[
+      {name:'山东省', m:{}, cg:[
+        {name:'青岛，烟台，威海，日照',                               m:{'xin.done':8},  ps:['焦建浩']},
+        {name:'潍坊，淄博，滨州，东营',                               m:{'xin.done':8},  ps:['张昱瑄']},
+        {name:'泰安，临沂，枣庄，济宁，菏泽，济南，聊城，德州，莱芜', m:{'xin.done':12}, ps:['徐硕','陈虎']},
+      ]},
+      {name:'山西省', m:{'xin.done':13}, ps:['牛肖方']},
+    ]},
+    {name:'守正创新', m:{}, provinces:[
+      {name:'天津市', m:{'xin.done':7},  ps:['周云峰','李修勤','王凯飞']},
+      {name:'北京市', m:{'xin.done':21}, ps:['兰鑫','刘友珠','孟熙']},
+      {name:'河北省', m:{}, cg:[
+        {name:'保定市，沧州市，秦皇岛市，张家口市，承德市',       m:{'xin.done':5},  ps:['王大海']},
+        {name:'衡水市，邯郸市，邢台市，石家庄市，廊坊市，唐山市', m:{'xin.done':10}, ps:['王大海']},
+      ]},
+    ]},
+    {name:'辉光日新', m:{}, provinces:[
+      {name:'四川省', m:{}, cg:[
+        {name:'成都等城市',                       m:{'xin.done':2},  ps:['刘靓欢']},
+        {name:'自贡，泸州，资阳，内江，乐山，眉山', m:{'xin.done':6}, ps:['刘声川','刘靓欢']},
+      ]},
+      {name:'云南省', m:{'xin.done':4},  ps:['王英杰']},
+      {name:'贵州省', m:{'xin.done':16}, ps:['王佳瑶']},
+      {name:'重庆市', m:{'xin.done':5},  ps:['冯征','刘靓欢','闫小洋']},
+    ]},
+    {name:'其他', m:{'xin.done':0}, provinces:[
+      {name:'西藏自治区', m:{'xin.done':2}, ps:['郑保川']},
+    ]},
+  ]
+};
+
+/* ══ FAKE DATA ENRICHMENT ══ */
+function h(s){let v=0;for(let i=0;i<s.length;i++)v=(v*31+s.charCodeAt(i))&0xFFFFFF;return v}
+function rng(seed,idx,lo,hi){const v=h(seed+'_'+idx)/0xFFFFFF;return lo+v*(hi-lo)}
+
+function enrich(m, name) {
+  const done = m['xin.done']||0;
+  if(done <= 0) return;
+  const target = m['xin.target'] || Math.ceil(done/rng(name,1,0.55,0.82));
+  m['xin.ref']        = m['xin.ref'] || Math.ceil(target*rng(name,2,0.9,1.15));
+  m['xin.target']     = target;
+  m['xin.rate']       = done/target;
+  m['xin.gap']        = target-done;
+  m['xin.act']        = Math.ceil(done*rng(name,4,0.6,0.92));
+  m['xin.actRate']    = done>0 ? m['xin.act']/done : 0;
+  m['xin.sign']       = Math.ceil(done*rng(name,6,0.5,0.82));
+  m['xin.srate']      = done>0 ? m['xin.sign']/done : 0;
+  m['xin.estNew']     = Math.ceil(done*rng(name,33,0.08,0.25));
+  // 长名单 (merged into xin)
+  m['xin.changCnt']   = m['xin.changCnt'] || Math.ceil(done*rng(name,12,2.2,5.5));
+  const cc = m['xin.changCnt'];
+  m['xin.changEnroll']= Math.ceil(cc*rng(name,13,0.08,0.22));
+  m['xin.changRate']  = cc>0 ? m['xin.changEnroll']/cc : 0;
+  const changNew      = Math.ceil(m['xin.changEnroll']*rng(name,14,0.38,0.72));
+  // 短名单 (merged into xin)
+  m['xin.duanCnt']    = m['xin.duanCnt'] || Math.ceil(done*rng(name,15,0.35,0.9));
+  const dc = m['xin.duanCnt'];
+  m['xin.duanEnroll'] = Math.ceil(dc*rng(name,16,0.25,0.55));
+  m['xin.duanRate']   = dc>0 ? m['xin.duanEnroll']/dc : 0;
+  const duanNew       = Math.ceil(m['xin.duanEnroll']*rng(name,17,0.38,0.68));
+  // 关键人 (merged into xin)
+  m['xin.gjCnt']      = Math.ceil(done*rng(name,18,0.15,0.38));
+  m['xin.gjNew']      = Math.ceil(m['xin.gjCnt']*rng(name,20,0.28,0.62));
+  m['xin.gjNrate']    = m['xin.gjCnt']>0 ? m['xin.gjNew']/m['xin.gjCnt'] : 0;
+  // 带新总量
+  m['xin.dxTotal']    = changNew + duanNew + m['xin.gjNew'];
+  // 升班学员
+  const ld = Math.ceil(done*rng(name,7,0.18,0.52));
+  const lt = m['lao.target'] || Math.ceil(ld/rng(name,8,0.58,0.82));
+  m['lao.target']     = lt;
+  m['lao.done']       = ld;
+  m['lao.rate']       = ld/lt;
+  m['lao.gap']        = lt-ld;
+  m['lao.sign']       = Math.ceil(ld*rng(name,11,0.55,0.88));
+  m['lao.srate']      = ld>0 ? m['lao.sign']/ld : 0;
+  m['lao.estNew']     = Math.ceil(ld*rng(name,34,0.06,0.20));
+  m['lao.oldStu']     = Math.ceil(ld*rng(name,36,1.8,4.5));
+  // 主会场A
+  const adone = Math.ceil(done*rng(name,25,0.3,0.6));
+  const atgt  = Math.ceil(adone/rng(name,26,0.58,0.82));
+  m['zhuA.target']    = m['zhuA.target'] || atgt;
+  m['zhuA.done']      = adone;
+  m['zhuA.rate']      = adone/atgt;
+  m['zhuA.sign']      = Math.ceil(adone*rng(name,27,0.68,0.93));
+  m['zhuA.fee']       = Math.ceil(adone*rng(name,28,0.45,0.75));
+  m['zhuA.gap']       = Math.max(0,atgt-adone);
+  m['zhuA.srate']     = adone>0 ? m['zhuA.sign']/adone : 0;
+  // 本省分会场
+  const fdone = Math.ceil(done*rng(name,29,0.25,0.55));
+  const ftgt  = Math.ceil(fdone/rng(name,30,0.55,0.85));
+  m['fen.done']       = fdone;
+  m['fen.target']     = ftgt;
+  m['fen.rate']       = fdone/ftgt;
+  m['fen.gap']        = Math.max(0,ftgt-fdone);
+  m['fen.fee']        = Math.ceil(fdone*rng(name,31,0.5,0.82));
+  m['fen.sign']       = Math.ceil(fdone*rng(name,32,0.65,0.92));
+  m['fen.srate']      = fdone>0 ? m['fen.sign']/fdone : 0;
+}
+
+function sumM(mList) {
+  const r={};
+  mList.forEach(m => {
+    Object.entries(m).forEach(([k,v]) => {
+      if(typeof v==='number'&&!k.includes('rate')&&!k.includes('mom')&&!k.includes('trate')&&!k.includes('srate')&&!k.includes('nrate')&&!k.endsWith('.gap')) {
+        r[k]=(r[k]||0)+v;
+      }
+    });
+  });
+  // recompute rates — 正价学员
+  if(r['xin.done']!=null&&r['xin.target']){r['xin.rate']=r['xin.done']/r['xin.target'];r['xin.gap']=Math.max(0,r['xin.target']-r['xin.done']);}
+  if(r['xin.act']&&r['xin.done'])           r['xin.actRate']  = r['xin.act']/r['xin.done'];
+  if(r['xin.sign']&&r['xin.done'])          r['xin.srate']    = r['xin.sign']/r['xin.done'];
+  if(r['xin.changEnroll']&&r['xin.changCnt']) r['xin.changRate']= r['xin.changEnroll']/r['xin.changCnt'];
+  if(r['xin.duanEnroll']&&r['xin.duanCnt']) r['xin.duanRate'] = r['xin.duanEnroll']/r['xin.duanCnt'];
+  if(r['xin.gjNew']&&r['xin.gjCnt'])        r['xin.gjNrate']  = r['xin.gjNew']/r['xin.gjCnt'];
+  // 升班学员
+  if(r['lao.done']!=null&&r['lao.target']){r['lao.rate']=r['lao.done']/r['lao.target'];r['lao.gap']=Math.max(0,r['lao.target']-r['lao.done']);}
+  if(r['lao.sign']&&r['lao.done'])           r['lao.srate']    = r['lao.sign']/r['lao.done'];
+  // 主会场A
+  if(r['zhuA.done']!=null&&r['zhuA.target']){r['zhuA.rate']=r['zhuA.done']/r['zhuA.target'];r['zhuA.gap']=Math.max(0,r['zhuA.target']-r['zhuA.done']);r['zhuA.srate']=r['zhuA.done']>0?r['zhuA.sign']/r['zhuA.done']:0;}
+  // 本省分会场
+  if(r['fen.done']!=null&&r['fen.target']){r['fen.rate']=r['fen.done']/r['fen.target'];r['fen.gap']=Math.max(0,r['fen.target']-r['fen.done']);r['fen.srate']=r['fen.done']>0?r['fen.sign']/r['fen.done']:0;}
+  return r;
+}
+
+function enrichAll() {
+  // leaf nodes first
+  RAW.groups.forEach(g => {
+    g.provinces.forEach(prov => {
+      (prov.cg||[]).forEach(cg => {
+        if(cg.sub&&cg.sub.length){
+          cg.sub.forEach(sc=>enrich(sc.m, sc.name+cg.name+prov.name+g.name));
+          const agg=sumM(cg.sub.map(s=>s.m));
+          Object.assign(cg.m,agg);
+          enrich(cg.m, cg.name+prov.name+g.name);
+        } else {
+          enrich(cg.m, cg.name+prov.name+g.name);
+        }
+      });
+      if(!prov.cg||!prov.cg.length) enrich(prov.m, prov.name+g.name);
+    });
+    // aggregate province done & metrics
+    g.provinces.forEach(prov => {
+      if(prov.cg&&prov.cg.length) {
+        const agg=sumM(prov.cg.map(c=>c.m));
+        Object.assign(prov.m,agg);
+        enrich(prov.m, prov.name+g.name); // fill derived fields
+      }
+    });
+    // aggregate group
+    const agg=sumM(g.provinces.filter(p=>p.m).map(p=>p.m));
+    Object.assign(g.m,agg);
+    enrich(g.m, g.name);
+  });
+  // global total
+  const agg=sumM(RAW.groups.filter(g=>g.m).map(g=>g.m));
+  Object.assign(RAW.m, agg);
+}
+enrichAll();
+
+/* ══ PER-COURSE VALUE ══ */
+function getCourseVal(courseId, row, key) {
+  const base = row.m[key];
+  if(base == null) return base;
+  if(typeof base !== 'number') return base;
+  const sc = COURSE_SCALES[courseId] || {cnt:1, rAdj:0};
+  const isRate = /rate|mom|trate|srate|nrate/.test(key);
+  const jitter = rng(courseId + row.id + key, 77, 0, 1);
+  if(isRate) {
+    return Math.min(1, Math.max(0, base + sc.rAdj + (jitter - 0.5) * 0.08));
+  } else {
+    return Math.round(base * sc.cnt * (0.78 + jitter * 0.44));
+  }
+}
+
+/* ══ STATE ══ */
+const expanded  = new Set(['root']);
+const visibleCols = new Set();
+MG.forEach(g=>g.fields.forEach(f=>{if(f.def)visibleCols.add(g.id+'.'+f.id)}));
+let tempCols = null;
+let CURRENT_USER = '';
+let filterMode   = false;
+
+/* text data store: rowId → { 'strategy.val': '...', 'support.val': '...', 'guide.val': '...' } */
+const textStore = {};
+
+/* ══ STAGE DATA ══ */
+const stageStore = {};  // key: tsKey → { strategy:[{id,stage,content}], support:[...] }
+
+const PERSON_PRESETS = {
+  '丁上海': {
+    strategy:[
+      {id:'s3',period:'2026-06',stage:'冲刺阶段（6月）',content:'协调讲师资源点对点促成2位核心学员，力争月底前完成全年目标达成。'},
+      {id:'s2',period:'2026-05',stage:'第二阶段（5月）',content:'针对A级学员开展1对1深度约谈，重点介绍新课程与上一期的差异，推进签约。B级每周维系一次触达。'},
+      {id:'s1',period:'2026-04',stage:'第一阶段（4月）',content:'梳理在手学员清单，按意向度A/B/C分级。已完成6人初步沟通，A级2人、B级3人、C级1人，优先集中资源攻坚A级。'},
+    ],
+    support:[
+      {id:'p2',period:'2026-06',stage:'当前急需',content:'希望安排一次讲师直播答疑，邀请B级意向学员参与，提升信任感。'},
+      {id:'p1',period:'2026-05',stage:'上月支持',content:'需要最新版课程介绍手册 + 往届学员代表评价视频，用于向客户展示课程价值。'},
+    ]
+  },
+  '万晓辉': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'当前阶段（6月）',content:'扩大外围影响，邀约4位潜在学员参加下期公开体验课，进行预热筛选。重点盯住2位接近签约的学员。'},
+      {id:'s1',period:'2026-05',stage:'上月（5月）',content:'重点维护2位有强烈意向的学员，完成协议确认，确保不流失。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前紧急',content:'1位学员涉及跨省报名价格特殊情况，需总部协助审批定价方案，时间紧迫。'},
+    ]
+  },
+  '张湘玲': {
+    strategy:[
+      {id:'s3',period:'2026-06',stage:'冲刺阶段（6月）',content:'组织1场小型私董会沙龙，邀请6-8位意向客户，讲师出席，目标现场促成2-3人。'},
+      {id:'s2',period:'2026-05',stage:'第二阶段（5月）',content:'与3位关键人深度对接，协助设计推荐方案，盘活其企业内部潜在学员资源。'},
+      {id:'s1',period:'2026-04',stage:'第一阶段（4月）',content:'广西区域历史转化率偏低，优先激活存量学员，通过老带新机制撬动新增。'},
+    ],
+    support:[
+      {id:'p2',period:'2026-06',stage:'当前需要',content:'申请讲师出席南宁线下活动1次，时间可弹性配合总部排期。'},
+      {id:'p1',period:'2026-05',stage:'上月需要',content:'需要适合广西市场的推荐话术及常见问题解答文档，提升销售对话效率。'},
+    ]
+  },
+  '孙峥嵘': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'当前重点（6月）',content:'广州主城区5家意向明确企业已锁定，本月聚焦CEO/总裁级决策人拜访，推进最终签约。'},
+      {id:'s1',period:'2026-05',stage:'上月计划',content:'联合黄慈航共同推进珠三角联合营销活动，触达30位区域内潜在高管学员，建立基础池。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前需要',content:'需要总部提供企业内训定制化方案（含独立班型选项），用于与大客户对接。'},
+    ]
+  },
+  '杨佳帅': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'6月冲刺',content:'在嘉兴组织1场学员分享午餐会，邀请往届优秀学员作分享，目标促成5人报名。'},
+      {id:'s1',period:'2026-05',stage:'4-5月积累',content:'嘉兴区域18位在手学员已启动分级跟进，重点维护2家重点企业共3位高意向学员，每周保持深度接触。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前需要',content:'希望获取往届嘉兴/湖州学员成功案例整理，方便同城客户对标参考，增强说服力。'},
+    ]
+  },
+  '曾严': {
+    strategy:[
+      {id:'s3',period:'2026-06',stage:'冲刺促成（6月）',content:'与总部协调，在长沙举办"战略闭门工作坊"，面向TOP 10学员，实现体验式现场促成。'},
+      {id:'s2',period:'2026-05',stage:'次级市场（5月）',content:'常德、岳阳委托合作伙伴协助触达，完成首轮意向筛选，产出5-8个有效线索。'},
+      {id:'s1',period:'2026-04',stage:'建立主战场（4月）',content:'以长沙为核心，聚焦岳麓山大学科技城及梅溪湖片区企业，意向学员池已达27人。'},
+    ],
+    support:[
+      {id:'p2',period:'2026-06',stage:'当前申请',content:'申请长沙线下活动场地费用支持（预算约5000元）及配套物料制作。'},
+      {id:'p1',period:'2026-05',stage:'上月资料',content:'需要湖南省各行业龙头企业CEO名录一份，协助精准锁定高潜目标人群。'},
+    ]
+  },
+  '兰鑫': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'协同推进（6月）',content:'与刘友珠、孟熙三人分区域责任制，各负责4-5位核心学员独立跟进，避免重复触达。本月重点推进3位高意向学员签约。'},
+      {id:'s1',period:'2026-05',stage:'前期布局（5月）',content:'聚焦中关村、朝阳商务区两大商圈，深度经营12家目标企业的高管学员资源，建立信任关系。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前急需',content:'北京学员普遍关注课程实操性，需要1-2个往届北京本地学员的视频证言，用于打消顾虑。'},
+    ]
+  },
+  '周云峰': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'6月冲刺',content:'协调李修勤、王凯飞三人分头并进，各自负责不同目标企业，集中月底前完成签约冲刺。'},
+      {id:'s1',period:'2026-05',stage:'核心策略（5月）',content:'聚焦天津港口及制造业头部企业高管群体，跟进3家大型国企，进度稳健但周期较长。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前需要',content:'天津国企学员有特殊合规诉求，需要总部提供课程内容与国家政策/战略导向挂钩的话术参考材料。'},
+    ]
+  },
+  '刘奕': {
+    strategy:[
+      {id:'s1',period:'2026-06',stage:'当前重点（6月）',content:'佛山、珠海区域制造业客户群体庞大，聚焦3家龙头企业的高管群，推进试听体验转化。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前需要',content:'希望获得制造业细分行业的课程亮点提炼版本，更契合佛珠中山地区客户的语境。'},
+    ]
+  },
+  '蒋祥': {
+    strategy:[
+      {id:'s2',period:'2026-06',stage:'当前阶段（6月）',content:'在衡阳设立核心阵地，邀请意向学员参与小型闭门交流，提升互动深度和成交概率。'},
+      {id:'s1',period:'2026-05',stage:'上月布局',content:'衡阳、永州、郴州采用城市巡回策略，每两周集中拜访一个城市的核心目标客户。'},
+    ],
+    support:[
+      {id:'p1',period:'2026-06',stage:'当前申请',content:'申请差旅费用额度增加（三城轮巡交通成本较高），以及1次总部讲师下沉当地支持。'},
+    ]
+  },
+};
+
+const PROVINCE_GUIDE_STAGE_PRESETS = {
+  '广东省':[
+    {id:'gg3',period:'2026-06',stage:'2026年6月',content:'广东区域整体推进稳健，珠三角核心城市进度领先。建议重点关注城际协作机制，避免同一客户被多人重复触达造成反感。下阶段可考虑举办粤港澳大湾区联合体验活动提升整体声势。'},
+    {id:'gg2',period:'2026-05',stage:'2026年5月',content:'珠三角团队5月推进势头良好，孙峥嵘、罗元雪团队A级学员跟进到位。建议加大对深圳方向的高价值客户资源投入，配合节点活动加速决策。'},
+    {id:'gg1',period:'2026-04',stage:'2026年4月',content:'广东启动季整体达标。建议各城市组梳理长名单并分级管理，优先锁定意向明确的企业主群体，为5月冲刺做好储备。'},
+  ],
+  '浙江省':[
+    {id:'gz3',period:'2026-06',stage:'2026年6月',content:'浙江团队状态积极，杭嘉湖和宁绍舟两大架构均有不错进展。建议重点支持嘉兴/湖州架构提升对高意向学员的资源投入力度，同时补位温台地区的落后进度。'},
+    {id:'gz2',period:'2026-05',stage:'2026年5月',content:'5月浙江整体超预期，宁波架构表现亮眼。建议总结宁波经验并向其他城市组复制推广，关注杭州城市组跟进节奏是否有所松懈。'},
+  ],
+  '北京市':[
+    {id:'gb3',period:'2026-06',stage:'2026年6月',content:'北京三人团队配合良好，整体进度领先全国。建议在现有成果基础上进一步聚焦高价值企业，以质量换数量，争取年内拿下标杆性大客户。'},
+    {id:'gb2',period:'2026-05',stage:'2026年5月',content:'北京5月完成率全国第一，建议保持节奏并适当储备6月冲刺资源，同时关注学员复购和转介绍机会的挖掘。'},
+    {id:'gb1',period:'2026-04',stage:'2026年4月',content:'启动阶段北京基础扎实，建议重点维护政府及央企渠道，发挥首都区位优势引入高知名度标杆企业。'},
+  ],
+  '湖南省':[
+    {id:'gh3',period:'2026-06',stage:'2026年6月',content:'长沙市场基础扎实但其他地级市推进明显偏慢。建议曾严加强对衡阳、株洲方向的资源辐射，蒋祥所在区域可适当引入外部合作伙伴借力加速。'},
+    {id:'gh2',period:'2026-05',stage:'2026年5月',content:'湖南5月整体平稳，长沙完成率尚可，非省会城市需更多支持。建议总部提供适合二线城市的推广物料和话术模板。'},
+  ],
+  '江苏省':[
+    {id:'gj3',period:'2026-06',stage:'2026年6月',content:'江苏各城市组分布较散，需加强省内协同效应。建议每月组织一次省级内部交流，共享学员资源线索，避免各自为战。'},
+    {id:'gj2',period:'2026-05',stage:'2026年5月',content:'苏南城市组表现稳定，苏北进度偏慢。建议集中资源在苏南做出标杆案例，以点带面带动苏北信心。'},
+  ],
+  '天津市':[
+    {id:'gt3',period:'2026-06',stage:'2026年6月',content:'天津市场以国企和制造业为主，决策链条较长，需做好耐心跟进预期。建议重点维护关键决策人关系，在6月前完成核心目标客户的决策促进。'},
+  ],
+  '广西壮族自治区':[
+    {id:'ggx3',period:'2026-06',stage:'2026年6月',content:'广西区域历史转化相对薄弱，需要在话术和资料上给予更多定制化支持，建议总部为该区域提供适配本地市场的推广方案。'},
+  ],
+};
+const guideStageStore = {}; // tsKey → [{id,period,stage,content}]
+let _guideIdSeq = 0;
+
+function getGuideStages(tsKey, rowName) {
+  if(guideStageStore[tsKey]) return guideStageStore[tsKey];
+  return PROVINCE_GUIDE_STAGE_PRESETS[rowName] || [];
+}
+function getGuideActiveDat(tsKey, rowName) {
+  if(!guideStageStore[tsKey]) {
+    const p = PROVINCE_GUIDE_STAGE_PRESETS[rowName];
+    guideStageStore[tsKey] = p ? JSON.parse(JSON.stringify(p)) : [];
+  }
+  return guideStageStore[tsKey];
+}
+
+function getStageData(tsKey, field, rowName) {
+  if(stageStore[tsKey] && stageStore[tsKey][field] !== undefined) return stageStore[tsKey][field];
+  const p = PERSON_PRESETS[rowName];
+  return (p && p[field]) ? p[field] : [];
+}
+function getGuideData(tsKey, rowName) {
+  const stages = getGuideStages(tsKey, rowName);
+  const curPeriod = getCurrentPeriod();
+  const cur = stages.find(s => s.period === curPeriod);
+  return cur ? cur.content : '';
+}
+
+/* ══ BUILD ROWS ══ */
+const LV_COLORS=['#F59E0B','#1D6FCA','#7C3AED','#059669','#EA580C','#BE185D'];
+const LV_INDENT =[0,0,14,26,38,50];
+
+function buildRows() {
+  const rows=[];
+  const byDone=(a,b)=>((b.m&&b.m['xin.done'])||0)-((a.m&&a.m['xin.done'])||0);
+  rows.push({id:'root',pid:null,depth:0,type:'total',name:'总计',tag:'汇总',m:RAW.m,hasKids:true});
+  [...RAW.groups].sort(byDone).forEach(g=>{
+    const gid='g-'+g.name;
+    rows.push({id:gid,pid:'root',depth:1,type:'group',name:g.name,tag:'小组',m:g.m,hasKids:g.provinces.length>0});
+    [...g.provinces].sort(byDone).forEach(prov=>{
+      const pvid=gid+'-p-'+prov.name;
+      const hasCG=prov.cg&&prov.cg.length>0;
+      const hasPS=prov.ps&&prov.ps.length>0;
+      rows.push({id:pvid,pid:gid,depth:2,type:'province',name:prov.name,tag:'省份',m:prov.m,hasKids:hasCG||hasPS});
+      if(hasCG){
+        [...prov.cg].sort(byDone).forEach(cg=>{
+          const cgid=pvid+'-cg-'+cg.name;
+          const hasSub=cg.sub&&cg.sub.length>0;
+          const hasCGPS=cg.ps&&cg.ps.length>0;
+          rows.push({id:cgid,pid:pvid,depth:3,type:'citygroup',name:cg.name,tag:'城市组',m:cg.m,hasKids:hasSub||hasCGPS});
+          if(hasSub){
+            [...cg.sub].sort(byDone).forEach(sc=>{
+              const scid=cgid+'-sc-'+sc.name;
+              const hasSCPS=sc.ps&&sc.ps.length>0;
+              rows.push({id:scid,pid:cgid,depth:4,type:'city',name:sc.name,tag:'城市',m:sc.m,hasKids:hasSCPS});
+              (sc.ps||[]).forEach(p=>rows.push({id:scid+'-ps-'+p,pid:scid,depth:5,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+            });
+          } else {
+            (cg.ps||[]).forEach(p=>rows.push({id:cgid+'-ps-'+p,pid:cgid,depth:4,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+          }
+        });
+      } else if(hasPS){
+        (prov.ps||[]).forEach(p=>rows.push({id:pvid+'-ps-'+p,pid:pvid,depth:3,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+      }
+    });
+  });
+  return rows;
+}
+let ALL=buildRows();
+
+function isVisible(row){
+  if(!row.pid) return true;
+  if(!expanded.has(row.pid)) return false;
+  const par=ALL.find(r=>r.id===row.pid);
+  return par?isVisible(par):false;
+}
+
+/* ══ FILTER: MY AREAS ══ */
+function buildPersonMap(){
+  const map={};
+  RAW.groups.forEach(g=>{
+    g.provinces.forEach(prov=>{
+      const hasCG=prov.cg&&prov.cg.length>0;
+      if(hasCG){
+        prov.cg.forEach(cg=>{
+          if(cg.sub&&cg.sub.length){
+            cg.sub.forEach(sc=>{
+              (sc.ps||[]).forEach(p=>{
+                if(!map[p])map[p]=[];
+                if(!map[p].find(a=>a.label===sc.name))
+                  map[p].push({label:sc.name,ctx:g.name+' · '+prov.name+' · '+cg.name,m:sc.m});
+              });
+            });
+          } else {
+            (cg.ps||[]).forEach(p=>{
+              if(!map[p])map[p]=[];
+              if(!map[p].find(a=>a.label===cg.name&&a.ctx===g.name+'·'+prov.name))
+                map[p].push({label:cg.name,ctx:g.name+' · '+prov.name,m:cg.m});
+            });
+          }
+        });
+      } else if(prov.ps&&prov.ps.length){
+        prov.ps.forEach(p=>{
+          if(!map[p])map[p]=[];
+          if(!map[p].find(a=>a.label===prov.name&&a.ctx===g.name))
+            map[p].push({label:prov.name,ctx:g.name,m:prov.m});
+        });
+      }
+    });
+  });
+  return map;
+}
+
+function getMyRows() {
+  const pm=buildPersonMap();
+  const areas=pm[CURRENT_USER]||[];
+  // find owned row ids
+  const owned=new Set();
+  areas.forEach(a=>{
+    ALL.forEach(r=>{ if(r.name===a.label) owned.add(r.id); });
+  });
+  // also include person rows that belong to current user
+  ALL.forEach(r=>{
+    if(r.type==='person'&&r.name===CURRENT_USER) {
+      owned.add(r.id);
+      // also consider parent as owned
+      if(r.pid) owned.add(r.pid);
+    }
+  });
+  // ancestors
+  const anc=new Set();
+  [...owned].forEach(id=>{
+    let r=ALL.find(x=>x.id===id);
+    while(r&&r.pid){anc.add(r.pid);r=ALL.find(x=>x.id===r.pid);}
+  });
+  return {owned,anc};
+}
+
+function toggleMyAreas() {
+  filterMode=!filterMode;
+  const btn=document.getElementById('myAreaBtn');
+  btn.classList.toggle('active',filterMode);
+  const lbl=btn.querySelector('.ma-label');
+  if(lbl) lbl.textContent=filterMode?'查看全部数据':'只看我负责的地区';
+  if(filterMode){
+    // expand to show owned rows
+    const {owned,anc}=getMyRows();
+    [...owned,...anc].forEach(id=>{
+      const r=ALL.find(x=>x.id===id);
+      if(r&&r.hasKids) expanded.add(r.id);
+    });
+  }
+  renderBody();
+}
+
+/* ══ RENDER HEAD ══ */
+function getVisCols(){
+  const cols=[];
+  MG.forEach(g=>g.fields.forEach(f=>{
+    if(visibleCols.has(g.id+'.'+f.id)) cols.push({g,f,key:g.id+'.'+f.id});
+  }));
+  return cols;
+}
+
+function renderHead(){
+  const cols=getVisCols();
+  const activeCourses=COURSES.filter(c=>selectedCourses.has(c.id));
+  const multi=activeCourses.length>1;
+
+  const catGrps=[];
+  let cur=null;
+  cols.forEach(c=>{
+    if(!cur||cur.gid!==c.g.id){cur={gid:c.g.id,g:c.g,count:1};catGrps.push(cur);}
+    else cur.count++;
+  });
+  const totalCols=cols.length;
+
+  const nameTh=`<th class="th-cat th-name-wrap" rowspan="${multi?3:2}">
+    <div class="th-name-inner">组织架构</div>
+    <div class="exp-row">
+      <span class="exp-btn" onclick="expandToDepth(1)">小组</span>
+      <span class="exp-btn" onclick="expandToDepth(2)">省份</span>
+      <span class="exp-btn" onclick="expandToDepth(3)">城市组</span>
+      <span class="exp-btn" onclick="expandToDepth(4)">人员</span>
+    </div>
+  </th>`;
+
+  let html='';
+  if(multi){
+    /* Row 0 — course name spans */
+    html+=`<tr>${nameTh}`;
+    activeCourses.forEach((course,ci)=>{
+      const isLast=ci===activeCourses.length-1;
+      html+=`<th class="th-course" colspan="${totalCols}"
+        style="background:${course.bg};color:${course.color};border-top:2px solid ${course.color};${isLast?'':'border-right:2px solid var(--bdr2);'}">${course.name}</th>`;
+    });
+    html+='</tr>';
+    /* Row 1 — category groups repeated (other groups merged) */
+    html+='<tr>';
+    activeCourses.forEach((course,ci)=>{
+      const isLastCourse=ci===activeCourses.length-1;
+      let gi=0;
+      while(gi<catGrps.length){
+        const {g,count}=catGrps[gi];
+        const isLastRendered=gi===catGrps.length-1;
+        const sep=(isLastRendered&&!isLastCourse)?'border-right:2px solid var(--bdr2)!important;':'';
+        if(g.isOther){
+          let tot=count,j=gi+1;
+          while(j<catGrps.length&&catGrps[j].g.isOther){tot+=catGrps[j].count;j++;}
+          const isLast=j===catGrps.length;
+          const s=(isLast&&!isLastCourse)?'border-right:2px solid var(--bdr2)!important;':'';
+          html+=`<th class="th-cat c-other" colspan="${tot}" style="${s}">其他</th>`;
+          gi=j;
+        } else {
+          html+=`<th class="th-cat ${g.cls}" colspan="${count}" style="${sep}">${g.name}</th>`;
+          gi++;
+        }
+      }
+    });
+    html+='</tr>';
+    /* Row 2 — field names repeated */
+    html+='<tr>';
+    activeCourses.forEach((course,ci)=>{
+      const isLastCourse=ci===activeCourses.length-1;
+      cols.forEach(({g,f},fi)=>{
+        const isLastF=fi===cols.length-1;
+        const sep=(isLastF&&!isLastCourse)?'border-right:2px solid var(--bdr2)!important;':'';
+        const label=g.isOther?g.name:f.name;
+        const tipHtml=f.tip?`<i class="th-tip" data-tip="${f.tip.replace(/"/g,'&quot;')}">?</i>`:'';
+        html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}${sep}">${label}${tipHtml}</th>`;
+      });
+    });
+    html+='</tr>';
+  } else {
+    /* Single course — standard 2-row (other groups merged into 其他) */
+    html+=`<tr>${nameTh}`;
+    let gi2=0;
+    while(gi2<catGrps.length){
+      const {g,count}=catGrps[gi2];
+      if(g.isOther){
+        let tot=count,j=gi2+1;
+        while(j<catGrps.length&&catGrps[j].g.isOther){tot+=catGrps[j].count;j++;}
+        html+=`<th class="th-cat c-other" colspan="${tot}">其他</th>`;
+        gi2=j;
+      } else {
+        html+=`<th class="th-cat ${g.cls}" colspan="${count}">${g.name}</th>`;
+        gi2++;
+      }
+    }
+    html+='</tr><tr>';
+    cols.forEach(({g,f})=>{
+      const label=g.isOther?g.name:f.name;
+      const tipHtml=f.tip?`<i class="th-tip" data-tip="${f.tip.replace(/"/g,'&quot;')}">?</i>`:'';
+      html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}">${label}${tipHtml}</th>`;
+    });
+    html+='</tr>';
+  }
+  document.getElementById('tableHead').innerHTML=html;
+}
+
+/* ══ RENDER BODY ══ */
+function renderBody(){
+  const cols=getVisCols();
+  const activeCourses=COURSES.filter(c=>selectedCourses.has(c.id));
+  let myOwned=null,myAnc=null;
+  if(filterMode){const {owned,anc}=getMyRows();myOwned=owned;myAnc=anc;}
+
+  /* precompute sibling max for each (pid, fieldKey) to drive bar widths */
+  const sibMaxMap={};
+  ALL.forEach(row=>{
+    if(!row.pid) return;
+    cols.forEach(({key,f})=>{
+      if(f.pct||f.isText) return;
+      const v=row.m[key];
+      if(typeof v!=='number'||v<=0) return;
+      // per-parent sibling max
+      const mk=row.pid+'||'+key;
+      if(!sibMaxMap[mk]||v>sibMaxMap[mk]) sibMaxMap[mk]=v;
+      // global max per row-type (used for cross-group province comparison)
+      const tk=row.type+'||'+key;
+      if(!sibMaxMap[tk]||v>sibMaxMap[tk]) sibMaxMap[tk]=v;
+    });
+  });
+
+  let html='';
+  ALL.forEach(row=>{
+    const vis=isVisible(row);
+    const isExp=expanded.has(row.id);
+    const c=LV_COLORS[Math.min(row.depth,LV_COLORS.length-1)]||'#64748B';
+    const indent=LV_INDENT[Math.min(row.depth,LV_INDENT.length-1)]||0;
+
+    let filterHide=false,isAnc=false;
+    if(filterMode&&myOwned){
+      if(!myOwned.has(row.id)&&!myAnc.has(row.id)) filterHide=true;
+      if(myAnc&&myAnc.has(row.id)&&!myOwned.has(row.id)) isAnc=true;
+    }
+
+    const cls=`rl${Math.min(row.depth,5)}${vis?'':' row-hide'}${filterHide?' row-hide':''}${isAnc?' row-anc':''}`;
+    html+=`<tr class="${cls}" data-id="${row.id}">`;
+    html+=`<td class="td-name-wrap">
+      <div class="td-name-inner" style="padding-left:${8+indent}px;">
+        <span class="tog${row.hasKids?'':' leaf'}" onclick="toggleRow('${row.id}')"
+          style="color:${c};border-color:${c}50;">${row.hasKids?(isExp?'−':'+'):'·'}</span>
+        <span class="lv-bar" style="background:${c};opacity:.65;"></span>
+        <span class="row-lbl" data-tip="${row.name}">${row.name}</span>
+        <span class="row-tag" style="background:${c}20;color:${c};">${row.tag}</span>
+      </div>
+    </td>`;
+
+    /* repeat metric columns for each selected course */
+    activeCourses.forEach((course,ci)=>{
+      const isLastCourse=ci===activeCourses.length-1;
+      cols.forEach(({g,key,f},fi)=>{
+        const isLastF=fi===cols.length-1;
+        const sepStyle=(isLastF&&!isLastCourse)?'border-right:2px solid var(--bdr2)!important;':'';
+        /* Text fields */
+        if(f.isText){
+          const levelOK=!g.levelOnly||g.levelOnly===row.type;
+          if(!levelOK){
+            html+=`<td style="${sepStyle}"><div class="td-txt-na">—</div></td>`;
+            return;
+          }
+          const tsKey=course.id+'::'+row.id;
+          /* Strategy / Support — inline edit */
+          if(g.id==='strategy'||g.id==='support'){
+            const field=g.id==='strategy'?'strategy':'support';
+            const stages=getStageData(tsKey,field,row.name);
+            const rname=row.name.replace(/&/g,'&amp;');
+            const curPeriod=getCurrentPeriod();
+            const curStg=stages.find(s=>s.period===curPeriod);
+            const fullText=curStg?curStg.content:(stages.length>0?stages[0].content:'');
+            if(fullText){
+              html+=`<td style="${sepStyle}" data-tskey="${tsKey}" data-field="${field}" data-rname="${rname}"
+                onclick="openInlineEd(event,this,this.dataset.tskey,this.dataset.field,this.dataset.rname)">
+                <div class="td-tc">
+                  <div class="td-tc-txt">${fullText}</div>
+                  <div class="td-tc-sub">点击编辑 ✎</div>
+                </div></td>`;
+            } else {
+              html+=`<td style="${sepStyle}" data-tskey="${tsKey}" data-field="${field}" data-rname="${rname}"
+                onclick="openInlineEd(event,this,this.dataset.tskey,this.dataset.field,this.dataset.rname)">
+                <div class="td-tc-add">＋ 添加${g.name}</div></td>`;
+            }
+            return;
+          }
+          /* Guide — inline edit */
+          if(g.id==='guide'){
+            const val=getGuideData(tsKey,row.name);
+            const rname=row.name.replace(/&/g,'&amp;');
+            if(!val){
+              html+=`<td style="${sepStyle}" data-tskey="${tsKey}" data-rname="${rname}"
+                onclick="openInlineEdGuide(event,this,this.dataset.tskey,this.dataset.rname)">
+                <div class="td-tc-add">＋ 添加指导建议</div></td>`;
+            } else {
+              html+=`<td style="${sepStyle}" data-tskey="${tsKey}" data-rname="${rname}"
+                onclick="openInlineEdGuide(event,this,this.dataset.tskey,this.dataset.rname)">
+                <div class="td-tc">
+                  <div class="td-tc-txt">${val}</div>
+                  <div class="td-tc-sub">点击编辑 ✎</div>
+                </div></td>`;
+            }
+            return;
+          }
+          return;
+        }
+        /* Numeric fields */
+        const raw=getCourseVal(course.id,row,key);
+        let disp='—',cls2='td-num id';
+        if(raw!=null){
+          if(f.pct){
+            const pv=raw*100;
+            const pcls=pv>=80?'hi':pv>=55?'mid':'lo';
+            if(row.type==='group'||row.type==='total'){
+              html+=`<td style="${sepStyle}"><div class="td-num"><span class="pct-num ${pcls}">${Math.round(pv)}%</span></div></td>`;
+            } else {
+              const barW=Math.min(100,Math.max(0,pv)).toFixed(1);
+              html+=`<td style="${sepStyle}"><div class="td-num-bar"><div class="td-bar-fill ${pcls}" style="width:${barW}%;"></div><span class="pct-num ${pcls}">${Math.round(pv)}%</span></div></td>`;
+            }
+            return;
+          } else {
+            disp=raw===0?'0':Math.round(raw).toLocaleString('zh-CN');
+            cls2='td-num'+(raw===0?' iz':'');
+            /* mini bar — only for xin.done at province level, vs global province max */
+            if(key==='xin.done'&&row.type==='province'){
+              const globalMax=sibMaxMap['province||'+key]||0;
+              if(globalMax>0&&raw>0){
+                const barPct=Math.min(100,raw/globalMax*100).toFixed(1);
+                html+=`<td style="${sepStyle}"><div class="td-num-bar"><div class="td-bar-fill" style="width:${barPct}%;background:${g.fgColor};"></div><span class="${cls2}">${disp}</span></div></td>`;
+                return;
+              }
+            }
+          }
+        }
+        html+=`<td style="${sepStyle}"><div class="${cls2}">${disp}</div></td>`;
+      });
+    });
+
+    html+='</tr>';
+  });
+  document.getElementById('tableBody').innerHTML=html;
+}
+
+function rerender(){renderHead();renderBody();}
+
+/* ══ EXPAND ══ */
+function toggleRow(id){
+  if(expanded.has(id)){collapseDesc(id);expanded.delete(id);}
+  else expanded.add(id);
+  renderBody();
+}
+function collapseDesc(id){ALL.forEach(r=>{if(r.pid===id){collapseDesc(r.id);expanded.delete(r.id);}})}
+function expandToDepth(maxD){
+  expanded.clear();
+  ALL.forEach(r=>{if(r.depth<maxD&&r.hasKids)expanded.add(r.id);});
+  renderBody();
+}
+
+/* ══ COLUMN SETTINGS ══ */
+function openColPanel(){
+  tempCols=new Set(visibleCols);
+  renderPanel();
+  document.getElementById('colPanel').classList.add('show');
+  document.getElementById('colOverlay').classList.add('show');
+  document.getElementById('settingsBtn').classList.add('active');
+}
+function closeColPanel(apply){
+  if(apply){visibleCols.clear();tempCols.forEach(c=>visibleCols.add(c));rerender();}
+  document.getElementById('colPanel').classList.remove('show');
+  document.getElementById('colOverlay').classList.remove('show');
+  document.getElementById('settingsBtn').classList.remove('active');
+  tempCols=null;
+}
+function resetColDefaults(){
+  tempCols=new Set();
+  MG.forEach(g=>g.fields.forEach(f=>{if(f.def)tempCols.add(g.id+'.'+f.id);}));
+  renderPanel();
+}
+function toggleSelectAll(){
+  if(!tempCols)return;
+  const total=MG.reduce((s,g)=>s+g.fields.length,0);
+  const allOn=tempCols.size===total;
+  tempCols.clear();
+  if(!allOn) MG.forEach(g=>g.fields.forEach(f=>tempCols.add(g.id+'.'+f.id)));
+  document.getElementById('selAllBtn').textContent=allOn?'全选所有指标':'取消全选';
+  renderPanel();
+}
+function toggleField(key,e){
+  if(e)e.stopPropagation();
+  if(!tempCols)return;
+  if(tempCols.has(key))tempCols.delete(key);else tempCols.add(key);
+  renderPanel();
+}
+function toggleGroupAll(gid){
+  if(!tempCols)return;
+  const g=MG.find(x=>x.id===gid);
+  const allOn=g.fields.every(f=>tempCols.has(gid+'.'+f.id));
+  g.fields.forEach(f=>{const k=gid+'.'+f.id;if(allOn)tempCols.delete(k);else tempCols.add(k);});
+  renderPanel();
+}
+
+function renderPanel(){
+  const total=MG.reduce((s,g)=>s+g.fields.length,0);
+  const selAllBtn=document.getElementById('selAllBtn');
+  if(selAllBtn) selAllBtn.textContent=tempCols&&tempCols.size===total?'取消全选':'全选所有指标';
+
+  let html=`<div class="pg-group">
+    <div class="pg-gh disabled" style="background:#F1F5F9;color:#94A3B8;">
+      <span>组织架构（固定显示，不可编辑）</span>
+    </div>
+    ${['小组','省份','城市小组/城市','人员'].map(n=>`<div class="pg-field disabled"><input type="checkbox" checked disabled><span class="pg-fn">${n}</span></div>`).join('')}
+  </div>`;
+  const regularGs=MG.filter(g=>!g.isOther);
+  const otherGs=MG.filter(g=>g.isOther);
+
+  function renderGroup(g){
+    const allOn=g.fields.every(f=>tempCols.has(g.id+'.'+f.id));
+    let s=`<div class="pg-group">
+      <div class="pg-gh" onclick="toggleGroupAll('${g.id}')" style="background:${g.fgBg};color:${g.fgColor};">
+        <span>${g.name}</span>
+        <span class="pg-ta">${allOn?'全部取消':'全选'}</span>
+      </div>`;
+    g.fields.forEach(f=>{
+      const k=g.id+'.'+f.id;const chk=tempCols.has(k);
+      s+=`<div class="pg-field" onclick="toggleField('${k}')">
+        <input type="checkbox" id="cb-${k.replace(/\./g,'_')}" ${chk?'checked':''} onclick="toggleField('${k}',event)">
+        <span class="pg-fn">${f.name}</span>${f.def?'<span class="pg-def">默认</span>':''}
+      </div>`;
+    });
+    return s+'</div>';
+  }
+
+  regularGs.forEach(g=>{ html+=renderGroup(g); });
+
+  if(otherGs.length){
+    html+=`<div class="pg-other-section">
+      <div class="pg-other-hd">其他</div>
+      <div class="pg-other-body">`;
+    otherGs.forEach(g=>{
+      g.fields.forEach(f=>{
+        const k=g.id+'.'+f.id; const chk=tempCols.has(k);
+        html+=`<div class="pg-field" onclick="toggleField('${k}')">
+          <input type="checkbox" id="cb-${k.replace(/\./g,'_')}" ${chk?'checked':''} onclick="toggleField('${k}',event)">
+          <span class="pg-fn">${g.name}</span>${f.def?'<span class="pg-def">默认</span>':''}
+        </div>`;
+      });
+    });
+    html+=`</div></div>`;
+  }
+
+  document.getElementById('panelBody').innerHTML=html;
+}
+
+/* ══ CURRENT USER ══ */
+function initUserSel(){
+  const pm=buildPersonMap();
+  const persons=Object.keys(pm).sort((a,b)=>a.localeCompare(b,'zh'));
+  const sel=document.getElementById('curUserSel');
+  sel.innerHTML=persons.map(p=>`<option value="${p}">${p}</option>`).join('');
+  CURRENT_USER=persons.find(p=>p==='郑保川')||persons[0]||'';
+  sel.value=CURRENT_USER;
+}
+function setCurUser(v){
+  CURRENT_USER=v;
+  if(filterMode){filterMode=false;const b=document.getElementById('myAreaBtn');b.classList.remove('active');const l=b.querySelector('.ma-label');if(l)l.textContent='只看我负责的地区';renderBody();}
+}
+
+/* ══ COUNTDOWN ══ */
+function updateCountdown(){
+  const el=document.getElementById('countdown');
+  const txt=document.getElementById('countdownTxt');
+  const d='2026-06-18';
+  const diff=Math.round((new Date(d)-new Date())/86400000);
+  txt.textContent=`距离截止日期 ${d} ${diff>=0?'还有 '+diff+' 天':'已超期 '+(-diff)+' 天'}`;
+  el.className='countdown'+(diff<0?' warn':diff<=3?' near':'');
+}
+
+/* ══ MEETING ══ */
+function openMeetingInput(){
+  document.getElementById('meetingNameInput').value='';
+  document.getElementById('meetingOv').classList.add('show');
+  document.getElementById('meetingInputModal').classList.add('show');
+  document.getElementById('meetingSummaryModal').classList.remove('show');
+  setTimeout(()=>document.getElementById('meetingNameInput').focus(),80);
+}
+function confirmMeetingName(){
+  const name=document.getElementById('meetingNameInput').value.trim();
+  if(!name){document.getElementById('meetingNameInput').focus();return;}
+  // compute start time: now + 2h
+  const start=new Date(Date.now()+2*3600*1000);
+  const pad=n=>String(n).padStart(2,'0');
+  const timeStr=`${start.getFullYear()}-${pad(start.getMonth()+1)}-${pad(start.getDate())} ${pad(start.getHours())}:${pad(start.getMinutes())}`;
+  document.getElementById('mSum-name').textContent=name;
+  document.getElementById('mSum-time').textContent=timeStr;
+  document.getElementById('meetingInputModal').classList.remove('show');
+  document.getElementById('meetingSummaryModal').classList.add('show');
+}
+function closeMeetingModals(){
+  document.getElementById('meetingOv').classList.remove('show');
+  document.getElementById('meetingInputModal').classList.remove('show');
+  document.getElementById('meetingSummaryModal').classList.remove('show');
+}
+
+/* ══ FIELD TIP ══ */
+(function(){
+  const el=document.getElementById('fld-tip');
+  document.addEventListener('mouseover',e=>{
+    const t=e.target.closest('.th-tip');
+    if(!t||!t.dataset.tip)return;
+    el.textContent=t.dataset.tip;
+    el.style.display='block';
+    positionTip(e,t);
+  });
+  document.addEventListener('mousemove',e=>{
+    if(el.style.display==='none')return;
+    if(!e.target.closest('.th-tip')){el.style.display='none';return;}
+    positionTip(e);
+  });
+  document.addEventListener('mouseout',e=>{
+    if(!e.target.closest('.th-tip'))return;
+    el.style.display='none';
+  });
+  function positionTip(e){
+    const gap=10,w=el.offsetWidth,h=el.offsetHeight;
+    let x=e.clientX-w/2,y=e.clientY-h-gap;
+    if(x<6)x=6;
+    if(x+w>window.innerWidth-6)x=window.innerWidth-w-6;
+    if(y<6)y=e.clientY+gap;
+    el.style.left=x+'px';el.style.top=y+'px';
+  }
+})();
+
+/* ══ TOAST ══ */
+function showToast(msg,color){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.cssText=`position:fixed;bottom:24px;right:24px;padding:10px 20px;border-radius:10px;font-size:12.5px;font-family:inherit;z-index:999;background:${color};color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.2);display:block;font-weight:500;letter-spacing:.01em;`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2000);
+}
+
+/* ══ UPLOAD REF TARGET ══ */
+function handleRefTargetUpload(input){
+  const file=input.files[0];
+  if(!file) return;
+  input.value='';
+  showToast('参考目标已上传：'+file.name,'#059669');
+}
+
+/* ══ INLINE TEXT EDIT ══ */
+function editTxt(rowId, key, el) {
+  const cur = (textStore[rowId]||{})[key]||'';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = cur;
+  input.style.cssText = 'width:100%;height:100%;border:none;outline:none;background:transparent;font:inherit;color:var(--txt);padding:0;font-size:12px;font-family:inherit;';
+  el.innerHTML = '';
+  el.appendChild(input);
+  el.style.overflow = 'visible';
+  input.focus();
+  input.select();
+  const done = () => {
+    const val = input.value.trim();
+    if(!textStore[rowId]) textStore[rowId] = {};
+    textStore[rowId][key] = val;
+    el.style.overflow = '';
+    el.dataset.tip = val;
+    el.className = 'td-txt' + (val ? '' : ' empty');
+    el.textContent = val || '—';
+  };
+  input.addEventListener('blur', done);
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter') input.blur();
+    if(e.key === 'Escape') { input.value = cur; input.blur(); }
+  });
+}
+
+/* ══ INSTANT TOOLTIP ══ */
+const tip = document.getElementById('row-tip');
+document.addEventListener('mouseover', e => {
+  const elFull = e.target.closest('[data-fulltip]');
+  if (elFull) {
+    tip.textContent = elFull.dataset.fulltip;
+    tip.style.opacity = '1';
+    moveTip(e);
+    return;
+  }
+  const el = e.target.closest('[data-tip]');
+  if (!el) { tip.style.opacity = '0'; return; }
+  // Only show data-tip if text is actually truncated
+  if (el.scrollWidth <= el.clientWidth) { tip.style.opacity = '0'; return; }
+  tip.textContent = el.dataset.tip;
+  tip.style.opacity = '1';
+  moveTip(e);
+});
+document.addEventListener('mousemove', e => {
+  if (tip.style.opacity === '1') moveTip(e);
+});
+document.addEventListener('mouseout', e => {
+  if (!e.target.closest('[data-tip]') && !e.target.closest('[data-fulltip]')) tip.style.opacity = '0';
+});
+function moveTip(e) {
+  const pad = 12, tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = e.clientX + pad, y = e.clientY + pad;
+  if (x + tw > window.innerWidth - 8) x = e.clientX - tw - pad;
+  if (y + th > window.innerHeight - 8) y = e.clientY - th - pad;
+  tip.style.left = x + 'px';
+  tip.style.top  = y + 'px';
+}
+
+/* ══ STAGE / GUIDE DATA HELPERS ══ */
+let _stageIdSeq = 100;
+
+function getCurrentPeriod() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+function formatPeriodLabel(period) {
+  if(!period) return '';
+  const [y,m] = period.split('-');
+  return y + '年' + parseInt(m) + '月';
+}
+function getRowPath(rowId) {
+  const parts = [];
+  let r = ALL.find(x=>x.id===rowId);
+  while(r && r.pid) { r = ALL.find(x=>x.id===r.pid); if(r) parts.unshift(r.name); }
+  return parts.join(' · ');
+}
+function _getStageDat(tsKey, field, rowName) {
+  if(!stageStore[tsKey]) stageStore[tsKey] = {};
+  if(!stageStore[tsKey][field]) {
+    const p = PERSON_PRESETS[rowName];
+    stageStore[tsKey][field] = (p&&p[field]) ? JSON.parse(JSON.stringify(p[field])) : [];
+  }
+  return stageStore[tsKey][field];
+}
+
+/* ══ INLINE EDITOR ══ */
+let _iedCtx = null;
+const _dotColors = ['#3D5AFE','#059669','#D97706','#7C3AED','#EF4444'];
+
+function openInlineEd(e, td, tsKey, field, rowName) {
+  e.stopPropagation();
+  _commitInlineEd();
+  _iedCtx = {type:'stage', tsKey, field, rowName};
+  const stages = _getStageDat(tsKey, field, rowName);
+  const curPeriod = getCurrentPeriod();
+  const cur = stages.find(s => s.period === curPeriod);
+  document.getElementById('ied-label').textContent = (field==='strategy'?'当前策略':'需要支持') + ' · ' + rowName;
+  document.getElementById('ied-period').textContent = formatPeriodLabel(curPeriod);
+  document.getElementById('ied-ta').value = cur ? cur.content : '';
+  document.getElementById('ied-ta').placeholder = '记录当前阶段的' + (field==='strategy'?'策略':'支持需求') + '内容…';
+  _renderIedHist(stages, curPeriod);
+  _positionIed(td);
+  document.getElementById('ied').classList.add('show');
+  setTimeout(()=>document.getElementById('ied-ta').focus(), 50);
+}
+
+function openInlineEdGuide(e, td, tsKey, rowName) {
+  e.stopPropagation();
+  _commitInlineEd();
+  _iedCtx = {type:'guide', tsKey, rowName};
+  const stages = getGuideActiveDat(tsKey, rowName);
+  const curPeriod = getCurrentPeriod();
+  const cur = stages.find(s => s.period === curPeriod);
+  document.getElementById('ied-label').textContent = '指导建议 · ' + rowName;
+  document.getElementById('ied-period').textContent = formatPeriodLabel(curPeriod);
+  document.getElementById('ied-ta').value = cur ? cur.content : '';
+  document.getElementById('ied-ta').placeholder = '请输入针对该省份的指导建议…';
+  _renderIedHist(stages, curPeriod);
+  _positionIed(td);
+  document.getElementById('ied').classList.add('show');
+  setTimeout(()=>document.getElementById('ied-ta').focus(), 50);
+}
+
+function _renderIedHist(stages, curPeriod) {
+  const past = stages.filter(s=>s.period && s.period < curPeriod).sort((a,b)=>b.period.localeCompare(a.period));
+  const histEl = document.getElementById('ied-hist');
+  if(past.length) {
+    histEl.innerHTML = `<div class="ied-hist-hd">往期记录</div>` +
+      past.map((s,i)=>`<div class="ied-hist-item"><div class="ied-hi-name"><span class="ied-hi-dot" style="background:${_dotColors[i%5]}"></span>${s.stage||formatPeriodLabel(s.period)}</div><div class="ied-hi-txt">${s.content||'（暂无）'}</div></div>`).join('');
+    histEl.style.display = '';
+  } else {
+    histEl.style.display = 'none';
+  }
+}
+
+function _positionIed(anchorEl) {
+  const el = document.getElementById('ied');
+  const rect = anchorEl.getBoundingClientRect();
+  const W = 310, gap = 6;
+  el.style.visibility = 'hidden'; el.style.display = 'flex';
+  const H = el.offsetHeight || 260;
+  el.style.visibility = ''; el.style.display = '';
+  let left = rect.left, top = rect.bottom + gap;
+  if(left + W > window.innerWidth - 10) left = window.innerWidth - W - 10;
+  if(left < 10) left = 10;
+  if(top + H > window.innerHeight - 10) top = rect.top - H - gap;
+  if(top < 10) top = 10;
+  el.style.left = left + 'px';
+  el.style.top = top + 'px';
+}
+
+function saveInlineEd() {
+  if(!_iedCtx) return;
+  const content = document.getElementById('ied-ta').value.trim();
+  const curPeriod = getCurrentPeriod();
+  if(_iedCtx.type === 'stage') {
+    const {tsKey, field, rowName} = _iedCtx;
+    const stages = _getStageDat(tsKey, field, rowName);
+    const cur = stages.find(s=>s.period===curPeriod);
+    if(cur) cur.content = content;
+    else if(content) stages.unshift({id:'sc'+(++_stageIdSeq), period:curPeriod, stage:formatPeriodLabel(curPeriod), content});
+  } else {
+    const {tsKey, rowName} = _iedCtx;
+    const stages = getGuideActiveDat(tsKey, rowName);
+    const cur = stages.find(s=>s.period===curPeriod);
+    if(cur) cur.content = content;
+    else if(content) stages.unshift({id:'gc'+(++_guideIdSeq), period:curPeriod, stage:formatPeriodLabel(curPeriod), content});
+  }
+  document.getElementById('ied').classList.remove('show');
+  _iedCtx = null;
+  showToast('已保存', '#059669');
+  renderBody();
+}
+
+function closeInlineEd(revert) {
+  if(!_iedCtx) return;
+  if(revert) {
+    document.getElementById('ied').classList.remove('show');
+    _iedCtx = null;
+  } else {
+    saveInlineEd();
+  }
+}
+
+function _commitInlineEd() {
+  if(_iedCtx) { saveInlineEd(); }
+}
+
+document.addEventListener('mousedown', function(e) {
+  const el = document.getElementById('ied');
+  if(!_iedCtx || !el.classList.contains('show')) return;
+  if(!el.contains(e.target)) saveInlineEd();
+});
+
+/* ══ COURSE PICKER ══ */
+function renderCourseDrop(){
+  const items=document.getElementById('courseDropItems');
+  if(!items)return;
+  items.innerHTML=COURSES.map(c=>`
+    <label class="course-drop-item">
+      <input type="checkbox" ${selectedCourses.has(c.id)?'checked':''} onchange="toggleCourse('${c.id}')">
+      <span class="course-drop-dot" style="background:${c.color}"></span>
+      <span class="course-drop-name">${c.name}</span>
+    </label>`).join('');
+  /* update button label */
+  const txt=document.getElementById('courseSelTxt');
+  if(!txt)return;
+  const sel=COURSES.filter(c=>selectedCourses.has(c.id));
+  if(sel.length===0){
+    txt.textContent='请选择课程';
+  } else if(sel.length===1){
+    txt.textContent=sel[0].name;
+  } else {
+    txt.innerHTML=`已选 <span class="course-count-badge">${sel.length}</span> 个课程`;
+  }
+}
+function toggleCourseDrop(e){
+  e&&e.stopPropagation();
+  const drop=document.getElementById('courseDrop');
+  const btn=document.getElementById('courseSelBtn');
+  if(!drop||!btn)return;
+  const open=drop.classList.toggle('show');
+  btn.classList.toggle('open',open);
+  if(open)renderCourseDrop();
+}
+function closeCourseDropOutside(e){
+  const picker=document.getElementById('coursePicker');
+  if(picker&&!picker.contains(e.target)){
+    document.getElementById('courseDrop')?.classList.remove('show');
+    document.getElementById('courseSelBtn')?.classList.remove('open');
+  }
+}
+function toggleCourse(id){
+  if(selectedCourses.has(id)){
+    if(selectedCourses.size>1)selectedCourses.delete(id);
+  } else {
+    selectedCourses.add(id);
+  }
+  renderCourseDrop();
+  rerender();
+}
+function toggleAllCourses(){
+  if(selectedCourses.size===COURSES.length){
+    selectedCourses=new Set([COURSES[0].id]);
+  } else {
+    selectedCourses=new Set(COURSES.map(c=>c.id));
+  }
+  renderCourseDrop();
+  rerender();
+}
+
+/* ══ INIT ══ */
+expanded.add('root');
+initUserSel();
+rerender();
+updateCountdown();
+renderCourseDrop();
+document.addEventListener('click',closeCourseDropOutside);
+</script>
+</body>
+</html>
