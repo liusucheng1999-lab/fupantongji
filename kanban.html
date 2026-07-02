@@ -294,8 +294,45 @@ td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,
 .course-count-badge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--pri);color:#fff;font-size:9.5px;font-weight:700;flex-shrink:0;vertical-align:middle}
 .course-arrow{flex-shrink:0;transition:transform .15s;color:var(--txt3);margin-left:auto}
 .course-sel-btn.open .course-arrow{transform:rotate(180deg)}
-.course-drop{position:absolute;top:calc(100% + 6px);left:0;min-width:240px;background:var(--sfc);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:600;padding:6px;display:none}
-.course-drop.show{display:block;animation:dropIn .12s ease-out}
+.course-drop-backdrop{position:fixed;inset:0;z-index:599;display:none}
+.course-drop-backdrop.show{display:block}
+.course-drop{position:absolute;top:calc(100% + 6px);left:0;width:400px;background:var(--sfc);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:600;display:none;overflow:hidden}
+.course-drop.show{display:flex;flex-direction:column;animation:dropIn .12s ease-out}
+.course-drop-top{padding:8px 8px 0;display:flex;align-items:center;gap:6px}
+.course-search{flex:1;height:28px;padding:0 9px;border:1px solid var(--bdr);border-radius:6px;background:#F8FAFC;font-family:inherit;font-size:12px;color:var(--txt);outline:none;box-sizing:border-box}
+.course-search:focus{border-color:var(--pri);background:#fff}
+.course-search::placeholder{color:var(--txt3)}
+.course-drop-limit{font-size:11px;color:var(--txt3);white-space:nowrap;padding-right:2px}
+.course-cascade{display:flex;border-top:1px solid var(--bdr);margin-top:8px}
+.course-cascade-left{width:148px;border-right:1px solid var(--bdr);overflow-y:auto;max-height:260px;flex-shrink:0;padding:4px 0}
+.course-cascade-right{flex:1;overflow-y:auto;max-height:260px;padding:4px 0}
+.csc-grp-item{display:flex;align-items:center;gap:7px;padding:8px 10px 8px 12px;cursor:pointer;font-size:12px;color:var(--txt2);border-left:3px solid transparent;transition:all .1s;user-select:none;line-height:1.3}
+.csc-grp-item:hover{background:#F4F6FA;color:var(--txt)}
+.csc-grp-item.active{background:var(--pri-l);color:var(--pri);border-left-color:var(--pri);font-weight:500}
+.csc-grp-badge{font-size:10px;color:var(--pri);font-weight:600;background:rgba(61,90,254,.1);border-radius:8px;padding:0 5px;min-width:16px;text-align:center;flex-shrink:0}
+.csc-right-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:12.5px;border-radius:6px;margin:1px 5px;transition:background .1s;user-select:none}
+.csc-right-item:hover{background:#F4F6FA}
+.csc-right-item.is-disabled{opacity:.38;pointer-events:none}
+.csc-right-item input[type=checkbox]{width:13px;height:13px;cursor:pointer;flex-shrink:0;accent-color:var(--pri)}
+/* ── upload course cascade ── */
+.up-sel-btn{width:100%;height:36px;padding:0 12px;border:1px solid var(--bdr);border-radius:8px;background:var(--sfc);font-family:inherit;font-size:13px;color:var(--txt);cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color .15s;outline:none}
+.up-sel-btn:hover,.up-sel-btn.open{border-color:var(--pri)}
+.up-sel-btn.open{box-shadow:0 0 0 2px rgba(61,90,254,.12)}
+.up-sel-txt{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.up-sel-arrow{flex-shrink:0;color:var(--txt3);transition:transform .15s}
+.up-sel-btn.open .up-sel-arrow{transform:rotate(180deg)}
+.up-cascade-drop{border:1px solid var(--bdr);border-radius:8px;overflow:hidden;margin-top:6px;display:none;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.up-cascade-drop.show{display:flex}
+.up-cascade-left{width:148px;border-right:1px solid var(--bdr);overflow-y:auto;max-height:220px;flex-shrink:0;padding:4px 0;background:var(--sfc)}
+.up-cascade-right{flex:1;overflow-y:auto;max-height:220px;padding:4px 0;background:var(--sfc)}
+.up-grp-item{display:flex;align-items:center;gap:7px;padding:8px 10px 8px 12px;cursor:pointer;font-size:12px;color:var(--txt2);border-left:3px solid transparent;transition:all .1s;user-select:none}
+.up-grp-item:hover{background:#F4F6FA;color:var(--txt)}
+.up-grp-item.active{background:var(--pri-l);color:var(--pri);border-left-color:var(--pri);font-weight:500}
+.up-course-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-size:12.5px;border-radius:6px;margin:1px 5px;transition:background .1s;user-select:none;color:var(--txt)}
+.up-course-item:hover{background:#F4F6FA}
+.up-course-item.selected{background:var(--pri-l);color:var(--pri);font-weight:500}
+.up-course-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.course-drop-item.is-disabled{opacity:.4;pointer-events:none}
 @keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .course-drop-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .1s;user-select:none}
 .course-drop-item:hover{background:#F4F6FA}
@@ -385,34 +422,37 @@ td:hover .td-tc-sub{opacity:1}
   <header class="topbar">
     <span class="topbar-page">复盘统计</span>
     <span class="topbar-sep"></span>
-    <div class="fg"><span class="fl">跟进项目</span>
+    <div class="fg"><span class="fl">选择课程</span>
+      <div id="courseDropBackdrop" class="course-drop-backdrop" onclick="closeCourseDrop()"></div>
       <div class="course-picker" id="coursePicker">
         <button class="course-sel-btn" id="courseSelBtn" onclick="toggleCourseDrop(event)">
           <span class="course-sel-txt" id="courseSelTxt">战略领导力第20期</span>
           <svg class="course-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="course-drop" id="courseDrop">
-          <button class="course-drop-sel-all" onclick="toggleAllCourses()">全选 / 取消全选</button>
-          <div class="course-drop-divider"></div>
-          <div id="courseDropItems"></div>
+          <div class="course-drop-top">
+            <input class="course-search" id="courseSearch" placeholder="搜索课程…" oninput="renderCourseDrop()" onclick="event.stopPropagation()">
+            <span class="course-drop-limit" id="courseDropLimit"></span>
+          </div>
+          <div class="course-cascade">
+            <div class="course-cascade-left" id="cascadeLeft"></div>
+            <div class="course-cascade-right" id="cascadeRight"></div>
+          </div>
         </div>
       </div>
-      <div class="countdown" id="countdown"><span class="cd-dot"></span><span id="countdownTxt"></span></div>
     </div>
     <div class="topbar-r">
       <button class="btn-meeting" onclick="openMeetingInput()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
         开启会议
       </button>
-      <button class="btn btn-primary" onclick="showToast('查询成功','#1D6FCA')">查询</button>
-      <button class="btn btn-default" onclick="showToast('已重置','#64748B')">重置</button>
-      <button class="btn btn-default" onclick="showToast('正在导出…','#059669')">导出</button>
-      <button class="btn btn-default" onclick="document.getElementById('refTargetInput').click()">
+<button class="btn btn-default" onclick="showToast('正在导出…','#059669')">导出</button>
+      <button class="btn btn-default" onclick="openUploadPickerModal()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         上传参考目标
       </button>
       <input type="file" id="refTargetInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleRefTargetUpload(this)">
-      <button class="btn-gear" id="settingsBtn" onclick="openColPanel()">
+<button class="btn-gear" id="settingsBtn" onclick="openColPanel()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
         列设置
       </button>
@@ -448,6 +488,42 @@ td:hover .td-tc-sub{opacity:1}
   <div class="panel-foot">
     <button class="btn btn-default" onclick="resetColDefaults()">重置默认</button>
     <button class="btn btn-primary" onclick="closeColPanel(true)">确认应用</button>
+  </div>
+</div>
+
+<!-- ════ UPLOAD PROJECT PICKER ════ -->
+<div class="meeting-ov" id="uploadPickerOv" onclick="closeUploadPickerModal()"></div>
+<div class="meeting-modal" id="uploadPickerModal" style="width:420px;max-width:94vw">
+  <div class="meeting-mh">
+    <span class="meeting-mtitle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AFE" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      上传参考目标
+    </span>
+    <button class="meeting-mclose" onclick="closeUploadPickerModal()">✕</button>
+  </div>
+  <div class="meeting-mb" style="padding:16px 20px 20px">
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">选择课程</div>
+    <button class="up-sel-btn" id="upSelBtn" onclick="toggleUploadCascade(event)">
+      <span class="up-sel-txt" id="upSelTxt">请选择课程</span>
+      <svg class="up-sel-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="up-cascade-drop" id="upCascadeDrop">
+      <div class="up-cascade-left" id="upCascadeLeft"></div>
+      <div class="up-cascade-right" id="upCascadeRight"></div>
+    </div>
+  </div>
+  <div class="meeting-mf" style="justify-content:space-between">
+    <button class="btn btn-default" style="height:34px;padding:0 14px;color:var(--txt2)" onclick="downloadRefTemplate()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载模版
+    </button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-default" style="height:34px;padding:0 18px" onclick="closeUploadPickerModal()">取消</button>
+      <button class="btn btn-primary" style="height:34px;padding:0 22px" onclick="confirmUploadCourse()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上传文件
+      </button>
+    </div>
   </div>
 </div>
 
@@ -530,86 +606,108 @@ td:hover .td-tc-sub{opacity:1}
 const MG = [
   {id:'xin',    name:'正价学员',    cls:'c-xin',    fgBg:'#EBF7F0', fgColor:'#15803D',
    fields:[
-    {id:'ref',        name:'参考目标',           def:false, tip:'运营配置，说明来源'},
-    {id:'target',     name:'目标',               def:true,  tip:'项目管理顾问填写'},
-    {id:'done',       name:'报名完成',           def:true,  tip:'正价有效报名量，含转移转赠（不计算赠送单，不包含润泽园公司内部购买的优惠单）完成量计算为下单人所在服务省市'},
+    {id:'ref',        name:'参考目标',           def:false, tip:'运营按照往期数据配置的参考目标'},
+    {id:'done',       name:'报名完成',           def:true,  tip:'正价有效报名量，含转移转赠（不计算赠送单，不包含公司内部购买的优惠单）。完成量计算为下单人所在服务省市'},
     {id:'rate',       name:'报名完成率',         def:true,  pct:true, tip:'完成 / 目标'},
+    {id:'target',     name:'目标',               def:true,  tip:'成长顾问填写'},
     {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
-    {id:'estNew',     name:'预估完成',           def:true,  tip:'长名单*0.2+短名单*0.5+带新量*0.8'},
+    {id:'estNew',     name:'预估完成',           def:true,  tip:'当前项目的长名单×0.2+短名单×0.5+带新量×0.8'},
     {id:'dxTotal',    name:'长短名单（包含带新）', def:false, tip:'长名单带新量+短名单带新量+关键人带新量+无关键人关系的长名单短名单带新量'},
     {id:'act',        name:'未激活人数',         def:false, tip:'完成量-有权限正价学员数'},
     {id:'actRate',    name:'激活率',             def:false, pct:true, tip:'激活数 / 完成量'},
     {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
     {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
     {id:'changCnt',   name:'长名单人数',         def:true,  tip:'长名单人数，支持点击跳转'},
-    {id:'changEnroll',name:'长名单正价报名数',   def:false, tip:'长名单中报名正价课学员数（含转移转赠）'},
+    {id:'changEnroll',name:'长名单正价报名数',   def:false, tip:'长名单中购买正价课或激活正价课学员数（含转移转赠）'},
     {id:'changRate',  name:'长名单转化率',       def:false, pct:true, tip:'长名单正价报名数/长名单单数'},
     {id:'duanCnt',    name:'短名单人数',         def:true,  tip:'短名单人数，支持点击跳转'},
-    {id:'duanEnroll', name:'短名单正价报名数',   def:false, tip:'短名单中报名正价课学员数（含转移转赠）'},
-    {id:'duanRate',   name:'短名单转化率',       def:false, pct:true, tip:'短名单正价报名数/短名单人数'},
+    {id:'duanEnroll', name:'短名单正价报名数',   def:false, tip:'短名单中购买正价课或激活正价课学员数（含转移转赠）'},
+    {id:'duanRate',   name:'短名单转化率',       def:false, pct:true, tip:'短名单正价报名数/短名单单数'},
     {id:'gjCnt',      name:'关键人数',           def:true,  tip:'关键人数，支持点击跳转'},
     {id:'gjNew',      name:'关键人带新',         def:false, tip:'关键人带来的新学员数量'},
-    {id:'gjNrate',    name:'关键人带新转化率',   def:false, pct:true, tip:'关键人带新学员中报名正价课数/长短名单中有关键人关系学员数'},
+    {id:'gjNrate',    name:'关键人带新转化率',   def:false, pct:true, tip:'关键人带新学员中购买正价课或激活正价课/长短名单中有关键人关系学员数'},
    ]},
   {id:'lao',    name:'升班学员',    cls:'c-lao',    fgBg:'#EBF0FF', fgColor:'#1E40AF',
    fields:[
-    {id:'target',     name:'目标',               def:false, tip:'项目管理顾问填写'},
     {id:'done',       name:'完成',               def:true,  tip:'非正价下购买量（不包含赠送单）'},
-    {id:'rate',       name:'完成率',             def:true,  pct:true, tip:'完成 / 目标'},
+    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
+    {id:'target',     name:'目标',               def:false, tip:'项目管理顾问填写'},
     {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
-    {id:'estNew',     name:'预估带新量',         def:true,  tip:'基于历史转化率预估的带新人数'},
-    {id:'oldStu',     name:'往期老学员',         def:false, tip:'非正价历史已购学员数'},
+    {id:'oldStu',     name:'往期老学员',         def:false, tip:'该项目关联的往期老学员的项目中对应匹配到该省市的人员的统计数据'},
     {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
     {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
    ]},
   {id:'zhuA',   name:'主会场A',     cls:'c-zhuA',   fgBg:'#FDF4EB', fgColor:'#B45309',
    fields:[
-    {id:'done',       name:'完成',               def:false, tip:'审核到主会场A且有课程权限数'},
-    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
-    {id:'target',     name:'目标',               def:false},
+    {id:'done',       name:'完成',               def:false, tip:'审核到该主会场且有课程权限数'},
+    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该主会场且有课程权限数 / 目标'},
+    {id:'target',     name:'目标',               def:false, tip:'设置的该主会场目标'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
-    {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到主会场A且有课程权限且缴纳会务费数'},
-    {id:'sign',       name:'签到数',             def:false},
-    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+    {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该主会场且有课程权限，且缴纳会务费数'},
+    {id:'sign',       name:'签到数',             def:false, tip:'审核到该主会场且有课程权限且签到'},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'审核到该主会场且有课程权限且签到 / 目标'},
    ]},
   {id:'fen',    name:'本省分会场',  cls:'c-fen',    fgBg:'#F0FDFA', fgColor:'#0F766E',
    fields:[
-    {id:'done',       name:'完成',               def:false},
-    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
-    {id:'target',     name:'目标',               def:false},
+    {id:'done',       name:'完成',               def:false, tip:'审核到该省份分会场且有课程权限数'},
+    {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该省份分会场且有课程权限数 / 目标数'},
+    {id:'target',     name:'目标',               def:false, tip:'顾问填写的目标'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
-    {id:'fee',        name:'缴纳会务费数',       def:false},
-    {id:'sign',       name:'签到数',             def:false},
-    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
+    {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该省份分会场且有课程权限，且缴纳会务费数'},
+    {id:'sign',       name:'签到数',             def:false, tip:'审核到该省份分会场且有课程权限且签到'},
+    {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'审核到该省份分会场且有课程权限且签到 / 目标'},
    ]},
   {id:'strategy',name:'当前策略',   isOther:true, cls:'c-strat', fgBg:'#EFF6FF', fgColor:'#1D4ED8',
    levelOnly:'person',
-   fields:[{id:'val',name:'当前策略',def:true,isText:true,tip:'当前阶段的策略。超过最后一个阶段的时间显示最后一个阶段所填写的策略。点击可以查看所有阶段的策略。必须设置阶段才可编辑和显示。'}]},
+   fields:[{id:'val',name:'当前策略',def:true,isText:true,tip:'当前阶段的策略/支持；不在该阶段时间时取时间最相邻的一个阶段。点击可以查看所有阶段的策略。必须设置阶段才可编辑且显示。'}]},
   {id:'support', name:'需要支持',   isOther:true, cls:'c-supp',  fgBg:'#FFF7ED', fgColor:'#C2410C',
    levelOnly:'person',
-   fields:[{id:'val',name:'需要支持',def:true,isText:true,tip:'当前阶段的支持需求。超过最后一个阶段的时间显示最后一个阶段所填写的内容。点击可以查看所有阶段的内容。必须设置阶段才可编辑和显示。'}]},
+   fields:[{id:'val',name:'需要支持',def:true,isText:true,tip:'当前阶段的需要支持；不在该阶段时间时取时间最相邻的一个阶段。点击可以查看所有阶段的需要支持字段。必须设置阶段才可编辑且显示。'}]},
   {id:'guide',   name:'指导建议',   isOther:true, cls:'c-guide', fgBg:'#F0FDF4', fgColor:'#065F46',
    levelOnly:'province',
    fields:[{id:'val',name:'指导建议',def:true,isText:true,tip:'只对省份维度支持进行编辑指导建议。'}]},
 ];
 
 /* ══ COURSES ══ */
-const COURSES = [
-  {id:'strat20',  name:'战略领导力第20期', color:'#3D5AFE', bg:'#EEF0FF'},
-  {id:'moment',   name:'经典一刻',          color:'#7C3AED', bg:'#F3EEFF'},
-  {id:'al100',    name:'案例100',            color:'#0891B2', bg:'#ECFEFF'},
-  {id:'strat1',   name:'战略一号班',         color:'#D97706', bg:'#FFFBEB'},
-  {id:'chuang36', name:'共创会36号班',       color:'#059669', bg:'#ECFDF5'},
+const COURSE_GROUPS = [
+  {id:'strat-grp',   name:'战略领导力项目组', color:'#3D5AFE', bg:'#EEF0FF', courses:[
+    {id:'strat30', name:'战略领导力第30期'},
+    {id:'strat29', name:'战略领导力第29期'},
+    {id:'strat28', name:'战略领导力第28期'},
+    {id:'strat27', name:'战略领导力第27期'},
+  ]},
+  {id:'moment-grp',  name:'经典一刻项目组',   color:'#7C3AED', bg:'#F3EEFF', courses:[
+    {id:'moment3', name:'经典一刻第3期'},
+    {id:'moment2', name:'经典一刻第2期'},
+    {id:'moment1', name:'经典一刻第1期'},
+  ]},
+  {id:'al100-grp',   name:'案例100项目组',     color:'#0891B2', bg:'#ECFEFF', courses:[
+    {id:'al100s3', name:'案例100第3季'},
+    {id:'al100s2', name:'案例100第2季'},
+    {id:'al100s1', name:'案例100第1季'},
+  ]},
+  {id:'strat1-grp',  name:'战略一号班项目组',  color:'#D97706', bg:'#FFFBEB', courses:[
+    {id:'strat1b3', name:'战略一号班第3期'},
+    {id:'strat1b2', name:'战略一号班第2期'},
+    {id:'strat1b1', name:'战略一号班第1期'},
+  ]},
+  {id:'chuang-grp',  name:'共创会项目组',      color:'#059669', bg:'#ECFDF5', courses:[
+    {id:'chuang38', name:'共创会第38期'},
+    {id:'chuang37', name:'共创会第37期'},
+    {id:'chuang36', name:'共创会第36期'},
+  ]},
 ];
+const COURSES = COURSE_GROUPS.flatMap(g => g.courses.map(c => ({...c, color:g.color, bg:g.bg})));
 /* Deterministic per-course scale factors: cnt=count multiplier, rAdj=rate adjustment */
 const COURSE_SCALES = {
-  strat20:  {cnt:1.00, rAdj: 0.00},
-  moment:   {cnt:0.48, rAdj:-0.07},
-  al100:    {cnt:0.65, rAdj: 0.04},
-  strat1:   {cnt:0.35, rAdj:-0.10},
-  chuang36: {cnt:0.72, rAdj: 0.02},
+  strat30:  {cnt:1.00, rAdj: 0.00}, strat29: {cnt:0.92, rAdj:-0.02},
+  strat28:  {cnt:0.85, rAdj:-0.03}, strat27: {cnt:0.78, rAdj:-0.04},
+  moment3:  {cnt:0.55, rAdj:-0.05}, moment2: {cnt:0.48, rAdj:-0.07}, moment1: {cnt:0.42, rAdj:-0.09},
+  al100s3:  {cnt:0.72, rAdj: 0.06}, al100s2: {cnt:0.65, rAdj: 0.04}, al100s1: {cnt:0.58, rAdj: 0.02},
+  strat1b3: {cnt:0.42, rAdj:-0.08}, strat1b2:{cnt:0.35, rAdj:-0.10}, strat1b1:{cnt:0.28, rAdj:-0.12},
+  chuang38: {cnt:0.82, rAdj: 0.04}, chuang37:{cnt:0.75, rAdj: 0.02}, chuang36:{cnt:0.72, rAdj: 0.02},
 };
-let selectedCourses = new Set(['strat20']);
+let selectedCourses = new Set(['strat30']);
 
 /* ══ SOURCE DATA ══ */
 const RAW = {
@@ -1486,23 +1584,7 @@ function renderPanel(){
     return s+'</div>';
   }
 
-  regularGs.forEach(g=>{ html+=renderGroup(g); });
-
-  if(otherGs.length){
-    html+=`<div class="pg-other-section">
-      <div class="pg-other-hd">其他</div>
-      <div class="pg-other-body">`;
-    otherGs.forEach(g=>{
-      g.fields.forEach(f=>{
-        const k=g.id+'.'+f.id; const chk=tempCols.has(k);
-        html+=`<div class="pg-field" onclick="toggleField('${k}')">
-          <input type="checkbox" id="cb-${k.replace(/\./g,'_')}" ${chk?'checked':''} onclick="toggleField('${k}',event)">
-          <span class="pg-fn">${g.name}</span>${f.def?'<span class="pg-def">默认</span>':''}
-        </div>`;
-      });
-    });
-    html+=`</div></div>`;
-  }
+  MG.forEach(g=>{ html+=renderGroup(g); });
 
   document.getElementById('panelBody').innerHTML=html;
 }
@@ -1527,8 +1609,13 @@ function updateCountdown(){
   const txt=document.getElementById('countdownTxt');
   const d='2026-06-18';
   const diff=Math.round((new Date(d)-new Date())/86400000);
-  txt.textContent=`距离截止日期 ${d} ${diff>=0?'还有 '+diff+' 天':'已超期 '+(-diff)+' 天'}`;
-  el.className='countdown'+(diff<0?' warn':diff<=3?' near':'');
+  if(diff>0){
+    txt.textContent=`距离开课日期剩余 ${diff} 天`;
+    el.className='countdown'+(diff<=3?' near':'');
+  } else {
+    txt.textContent=`已开课 ${-diff} 天`;
+    el.className='countdown warn';
+  }
 }
 
 /* ══ MEETING ══ */
@@ -1595,11 +1682,91 @@ function showToast(msg,color){
 }
 
 /* ══ UPLOAD REF TARGET ══ */
+let uploadTargetCourseId=null;
+let uploadActiveGroupId=COURSE_GROUPS[0].id;
+function openUploadPickerModal(){
+  uploadTargetCourseId=null;
+  uploadActiveGroupId=COURSE_GROUPS[0].id;
+  document.getElementById('upSelTxt').textContent='请选择课程';
+  document.getElementById('upSelBtn').classList.remove('open');
+  document.getElementById('upCascadeDrop').classList.remove('show');
+  document.getElementById('uploadPickerOv').classList.add('show');
+  document.getElementById('uploadPickerModal').classList.add('show');
+  renderUploadCascade();
+}
+function renderUploadCascade(){
+  const leftEl=document.getElementById('upCascadeLeft');
+  const rightEl=document.getElementById('upCascadeRight');
+  if(!leftEl||!rightEl)return;
+  leftEl.innerHTML=COURSE_GROUPS.map(g=>`
+    <div class="up-grp-item${g.id===uploadActiveGroupId?' active':''}" onclick="setUploadGroup('${g.id}')">
+      <span class="up-course-dot" style="background:${g.color}"></span>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.name}</span>
+    </div>`).join('');
+  const ag=COURSE_GROUPS.find(g=>g.id===uploadActiveGroupId);
+  if(ag){
+    rightEl.innerHTML=ag.courses.map(c=>`
+      <div class="up-course-item${uploadTargetCourseId===c.id?' selected':''}" onclick="selectUploadCourse('${c.id}')">
+        <span class="up-course-dot" style="background:${ag.color}"></span>
+        ${c.name}
+      </div>`).join('');
+  }
+}
+function setUploadGroup(id){
+  uploadActiveGroupId=id;
+  renderUploadCascade();
+}
+function selectUploadCourse(id){
+  uploadTargetCourseId=id;
+  const c=COURSES.find(x=>x.id===id);
+  document.getElementById('upSelTxt').textContent=c?c.name:'已选课程';
+  document.getElementById('upSelBtn').classList.remove('open');
+  document.getElementById('upCascadeDrop').classList.remove('show');
+  renderUploadCascade();
+}
+function toggleUploadCascade(e){
+  e&&e.stopPropagation();
+  const btn=document.getElementById('upSelBtn');
+  const drop=document.getElementById('upCascadeDrop');
+  const open=drop.classList.toggle('show');
+  btn.classList.toggle('open',open);
+}
+function closeUploadPickerModal(){
+  document.getElementById('uploadPickerOv').classList.remove('show');
+  document.getElementById('uploadPickerModal').classList.remove('show');
+  document.getElementById('upCascadeDrop').classList.remove('show');
+  document.getElementById('upSelBtn').classList.remove('open');
+  uploadTargetCourseId=null;
+}
+function confirmUploadCourse(){
+  if(!uploadTargetCourseId){showToast('请先选择课程','#D93025');return;}
+  closeUploadPickerModal();
+  document.getElementById('refTargetInput').click();
+}
+function downloadRefTemplate(){
+  const csv=[
+    '省份,小组,目标,参考目标',
+    '浙江省,自强不息,,',
+    '广东省,天火同人,,',
+    '江苏省,尽锐出战,,',
+    '四川省,天天大奋,,',
+    '湖南省,厚德载物,,',
+  ].join('\r\n');
+  const bom='﻿';
+  const blob=new Blob([bom+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='参考目标导入模版.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('模版已下载','#059669');
+}
 function handleRefTargetUpload(input){
   const file=input.files[0];
   if(!file) return;
+  const course=COURSES.find(c=>c.id===uploadTargetCourseId);
   input.value='';
-  showToast('参考目标已上传：'+file.name,'#059669');
+  showToast(`${course?course.name:'课程'} 参考目标已上传：${file.name}`,'#059669');
 }
 
 /* ══ INLINE TEXT EDIT ══ */
@@ -1800,26 +1967,65 @@ document.addEventListener('mousedown', function(e) {
 });
 
 /* ══ COURSE PICKER ══ */
+const MAX_COURSES=5;
+let activeGroupId=COURSE_GROUPS[0].id;
 function renderCourseDrop(){
-  const items=document.getElementById('courseDropItems');
-  if(!items)return;
-  items.innerHTML=COURSES.map(c=>`
-    <label class="course-drop-item">
-      <input type="checkbox" ${selectedCourses.has(c.id)?'checked':''} onchange="toggleCourse('${c.id}')">
-      <span class="course-drop-dot" style="background:${c.color}"></span>
-      <span class="course-drop-name">${c.name}</span>
-    </label>`).join('');
-  /* update button label */
+  const q=(document.getElementById('courseSearch')?.value||'').trim().toLowerCase();
+  const atMax=selectedCourses.size>=MAX_COURSES;
+  /* filter groups */
+  const visGroups=q
+    ?COURSE_GROUPS.filter(g=>g.name.includes(q)||g.courses.some(c=>c.name.includes(q)))
+    :COURSE_GROUPS;
+  if(visGroups.length&&!visGroups.find(g=>g.id===activeGroupId))activeGroupId=visGroups[0].id;
+  /* left panel */
+  const leftEl=document.getElementById('cascadeLeft');
+  if(leftEl){
+    leftEl.innerHTML=visGroups.length
+      ?visGroups.map(g=>{
+        const cnt=g.courses.filter(c=>selectedCourses.has(c.id)).length;
+        const act=g.id===activeGroupId;
+        return `<div class="csc-grp-item${act?' active':''}" onclick="setActiveGroup('${g.id}')">
+          <span class="course-drop-dot" style="background:${g.color};flex-shrink:0"></span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g.name}</span>
+          ${cnt?`<span class="csc-grp-badge">${cnt}</span>`:''}
+        </div>`;
+      }).join('')
+      :`<div style="padding:14px 8px;text-align:center;color:var(--txt3);font-size:12px">无匹配</div>`;
+  }
+  /* right panel */
+  const rightEl=document.getElementById('cascadeRight');
+  if(rightEl){
+    const ag=visGroups.find(g=>g.id===activeGroupId);
+    if(ag){
+      const visCourses=q?ag.courses.filter(c=>c.name.includes(q)||ag.name.includes(q)):ag.courses;
+      rightEl.innerHTML=visCourses.length
+        ?visCourses.map(c=>{
+          const checked=selectedCourses.has(c.id);
+          const disabled=!checked&&atMax;
+          return `<label class="csc-right-item${disabled?' is-disabled':''}">
+            <input type="checkbox" ${checked?'checked':''} ${disabled?'disabled':''} onchange="toggleCourse('${c.id}')">
+            <span>${c.name}</span>
+          </label>`;
+        }).join('')
+        :`<div style="padding:14px 8px;text-align:center;color:var(--txt3);font-size:12px">无匹配</div>`;
+    }
+  }
+  /* limit hint */
+  const lim=document.getElementById('courseDropLimit');
+  if(lim)lim.textContent=`已选 ${selectedCourses.size}/${MAX_COURSES}`;
+  /* button label */
   const txt=document.getElementById('courseSelTxt');
   if(!txt)return;
   const sel=COURSES.filter(c=>selectedCourses.has(c.id));
-  if(sel.length===0){
-    txt.textContent='请选择课程';
-  } else if(sel.length===1){
-    txt.textContent=sel[0].name;
-  } else {
-    txt.innerHTML=`已选 <span class="course-count-badge">${sel.length}</span> 个课程`;
-  }
+  if(!sel.length){txt.textContent='请选择课程';}
+  else if(sel.length===1){txt.textContent=sel[0].name;}
+  else{txt.innerHTML=`已选 <span class="course-count-badge">${sel.length}</span> 个课程`;}
+}
+function setActiveGroup(id){activeGroupId=id;renderCourseDrop();}
+function closeCourseDrop(){
+  document.getElementById('courseDrop')?.classList.remove('show');
+  document.getElementById('courseSelBtn')?.classList.remove('open');
+  document.getElementById('courseDropBackdrop')?.classList.remove('show');
 }
 function toggleCourseDrop(e){
   e&&e.stopPropagation();
@@ -1828,29 +2034,29 @@ function toggleCourseDrop(e){
   if(!drop||!btn)return;
   const open=drop.classList.toggle('show');
   btn.classList.toggle('open',open);
-  if(open)renderCourseDrop();
-}
-function closeCourseDropOutside(e){
-  const picker=document.getElementById('coursePicker');
-  if(picker&&!picker.contains(e.target)){
-    document.getElementById('courseDrop')?.classList.remove('show');
-    document.getElementById('courseSelBtn')?.classList.remove('open');
+  document.getElementById('courseDropBackdrop')?.classList.toggle('show',open);
+  if(open){
+    const inp=document.getElementById('courseSearch');
+    if(inp){inp.value='';inp.focus();}
+    renderCourseDrop();
   }
 }
 function toggleCourse(id){
   if(selectedCourses.has(id)){
     if(selectedCourses.size>1)selectedCourses.delete(id);
+    else return;
   } else {
+    if(selectedCourses.size>=MAX_COURSES){showToast(`最多选择 ${MAX_COURSES} 个项目`,'#D93025');renderCourseDrop();return;}
     selectedCourses.add(id);
   }
   renderCourseDrop();
   rerender();
 }
 function toggleAllCourses(){
-  if(selectedCourses.size===COURSES.length){
+  if(selectedCourses.size>=Math.min(COURSES.length,MAX_COURSES)){
     selectedCourses=new Set([COURSES[0].id]);
   } else {
-    selectedCourses=new Set(COURSES.map(c=>c.id));
+    selectedCourses=new Set(COURSES.slice(0,MAX_COURSES).map(c=>c.id));
   }
   renderCourseDrop();
   rerender();
@@ -1862,7 +2068,6 @@ initUserSel();
 rerender();
 updateCountdown();
 renderCourseDrop();
-document.addEventListener('click',closeCourseDropOutside);
 </script>
 </body>
 </html>
