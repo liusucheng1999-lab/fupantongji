@@ -447,6 +447,10 @@ td:hover .td-tc-sub{opacity:1}
         开启会议
       </button>
 <button class="btn btn-default" onclick="showToast('正在导出…','#059669')">导出</button>
+      <button class="btn btn-default" onclick="openOldStuConfigModal()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        配置老学员
+      </button>
       <button class="btn btn-default" onclick="openUploadPickerModal()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         上传参考目标
@@ -524,6 +528,46 @@ td:hover .td-tc-sub{opacity:1}
         上传文件
       </button>
     </div>
+  </div>
+</div>
+
+<!-- ════ OLD STUDENT CONFIG MODAL ════ -->
+<div class="meeting-ov" id="oldStuConfigOv" onclick="closeOldStuConfigModal()"></div>
+<div class="meeting-modal" id="oldStuConfigModal" style="width:460px;max-width:94vw">
+  <div class="meeting-mh">
+    <span class="meeting-mtitle">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3D5AFE" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      配置往期老学员关联
+    </span>
+    <button class="meeting-mclose" onclick="closeOldStuConfigModal()">✕</button>
+  </div>
+  <div class="meeting-mb" style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">选择课程</div>
+      <button class="up-sel-btn" id="osSelCourseBtn" onclick="toggleOsCourseDrop(event)">
+        <span class="up-sel-txt" id="osSelCourseTxt">请选择课程</span>
+        <svg class="up-sel-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="up-cascade-drop" id="osCourseDrop">
+        <div class="up-cascade-left" id="osCourseLeft"></div>
+        <div class="up-cascade-right" id="osCourseRight"></div>
+      </div>
+    </div>
+    <div id="osProjectSection" style="display:none">
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:8px">关联项目</div>
+      <button class="up-sel-btn" id="osSelProjectBtn" onclick="toggleOsProjectDrop(event)">
+        <span class="up-sel-txt" id="osSelProjectTxt">请选择关联项目</span>
+        <svg class="up-sel-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="up-cascade-drop" id="osProjectDrop">
+        <div class="up-cascade-left" id="osProjectLeft"></div>
+        <div class="up-cascade-right" id="osProjectRight"></div>
+      </div>
+    </div>
+  </div>
+  <div class="meeting-mf">
+    <button class="btn btn-default" style="height:34px;padding:0 18px" onclick="closeOldStuConfigModal()">取消</button>
+    <button class="btn btn-primary" style="height:34px;padding:0 22px" onclick="saveOldStuConfig()">保存配置</button>
   </div>
 </div>
 
@@ -607,12 +651,12 @@ const MG = [
   {id:'xin',    name:'正价学员',    cls:'c-xin',    fgBg:'#EBF7F0', fgColor:'#15803D',
    fields:[
     {id:'ref',        name:'参考目标',           def:false, tip:'运营按照往期数据配置的参考目标'},
-    {id:'done',       name:'报名完成',           def:true,  tip:'正价有效报名量，含转移转赠（不计算赠送单，不包含公司内部购买的优惠单）。完成量计算为下单人所在服务省市'},
-    {id:'rate',       name:'报名完成率',         def:true,  pct:true, tip:'完成 / 目标'},
     {id:'target',     name:'目标',               def:true,  tip:'成长顾问填写'},
+    {id:'done',       name:'报名完成',           def:true,  tip:'正价有效报名量（购买数量），含转移转赠（不计算赠送单，不包含公司内部购买的优惠单）。完成量计算为下单人所在服务省市'},
+    {id:'rate',       name:'报名完成率',         def:true,  pct:true, tip:'完成 / 目标'},
     {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
     {id:'estNew',     name:'预估完成',           def:true,  tip:'当前项目的长名单×0.2+短名单×0.5+带新量×0.8'},
-    {id:'dxTotal',    name:'长短名单（包含带新）', def:false, tip:'长名单带新量+短名单带新量+关键人带新量+无关键人关系的长名单短名单带新量'},
+    {id:'dxTotal',    name:'长短名单（包含带新）', def:false, tip:'长名单带新量+短名单带新量+关键人带新量+长名单短名单数量（不是被带新的成员）'},
     {id:'act',        name:'未激活人数',         def:false, tip:'完成量-有权限正价学员数'},
     {id:'actRate',    name:'激活率',             def:false, pct:true, tip:'激活数 / 完成量'},
     {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
@@ -629,19 +673,19 @@ const MG = [
    ]},
   {id:'lao',    name:'升班学员',    cls:'c-lao',    fgBg:'#EBF0FF', fgColor:'#1E40AF',
    fields:[
+    {id:'target',     name:'目标',               def:false, tip:'成长顾问填写'},
     {id:'done',       name:'完成',               def:true,  tip:'非正价下购买量（不包含赠送单）'},
     {id:'rate',       name:'完成率',             def:false, pct:true, tip:'完成 / 目标'},
-    {id:'target',     name:'目标',               def:false, tip:'项目管理顾问填写'},
     {id:'gap',        name:'缺口',               def:true,  tip:'目标 - 完成'},
     {id:'oldStu',     name:'往期老学员',         def:false, tip:'该项目关联的往期老学员的项目中对应匹配到该省市的人员的统计数据'},
     {id:'sign',       name:'签到数',             def:false, tip:'签到的正价学员总数'},
     {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'签到数 / 目标数'},
    ]},
-  {id:'zhuA',   name:'主会场A',     cls:'c-zhuA',   fgBg:'#FDF4EB', fgColor:'#B45309',
+  {id:'zhuA',   name:'xx主会场',     cls:'c-zhuA',   fgBg:'#FDF4EB', fgColor:'#B45309',
    fields:[
-    {id:'done',       name:'完成',               def:false, tip:'审核到该主会场且有课程权限数'},
+    {id:'target',     name:'目标',               def:false, tip:'设置的你省市输送到该主会场目标'},
+    {id:'done',       name:'完成',               def:false, tip:'你省市的学员审核到该主会场且有课程权限数'},
     {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该主会场且有课程权限数 / 目标'},
-    {id:'target',     name:'目标',               def:false, tip:'设置的该主会场目标'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
     {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该主会场且有课程权限，且缴纳会务费数'},
     {id:'sign',       name:'签到数',             def:false, tip:'审核到该主会场且有课程权限且签到'},
@@ -649,9 +693,9 @@ const MG = [
    ]},
   {id:'fen',    name:'本省分会场',  cls:'c-fen',    fgBg:'#F0FDFA', fgColor:'#0F766E',
    fields:[
+    {id:'target',     name:'目标',               def:false, tip:'顾问填写的目标'},
     {id:'done',       name:'完成',               def:false, tip:'审核到该省份分会场且有课程权限数'},
     {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该省份分会场且有课程权限数 / 目标数'},
-    {id:'target',     name:'目标',               def:false, tip:'顾问填写的目标'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
     {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该省份分会场且有课程权限，且缴纳会务费数'},
     {id:'sign',       name:'签到数',             def:false, tip:'审核到该省份分会场且有课程权限且签到'},
@@ -811,6 +855,14 @@ const RAW = {
 /* ══ FAKE DATA ENRICHMENT ══ */
 function h(s){let v=0;for(let i=0;i<s.length;i++)v=(v*31+s.charCodeAt(i))&0xFFFFFF;return v}
 function rng(seed,idx,lo,hi){const v=h(seed+'_'+idx)/0xFFFFFF;return lo+v*(hi-lo)}
+
+function enrichPerson(m, name, parentM, psCount) {
+  const pd = parentM['xin.done'] || 0;
+  if(pd <= 0) return;
+  const n = Math.max(1, psCount);
+  m['xin.done'] = Math.max(1, Math.round(pd * rng(name, 99, 0.5/n, 2.0/n)));
+  enrich(m, name);
+}
 
 function enrich(m, name) {
   const done = m['xin.done']||0;
@@ -1148,14 +1200,14 @@ function buildRows() {
               const scid=cgid+'-sc-'+sc.name;
               const hasSCPS=sc.ps&&sc.ps.length>0;
               rows.push({id:scid,pid:cgid,depth:4,type:'city',name:sc.name,tag:'城市',m:sc.m,hasKids:hasSCPS});
-              (sc.ps||[]).forEach(p=>rows.push({id:scid+'-ps-'+p,pid:scid,depth:5,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+              (sc.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,sc.m,sc.ps.length);rows.push({id:scid+'-ps-'+p,pid:scid,depth:5,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
             });
           } else {
-            (cg.ps||[]).forEach(p=>rows.push({id:cgid+'-ps-'+p,pid:cgid,depth:4,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+            (cg.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,cg.m,cg.ps.length);rows.push({id:cgid+'-ps-'+p,pid:cgid,depth:4,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
           }
         });
       } else if(hasPS){
-        (prov.ps||[]).forEach(p=>rows.push({id:pvid+'-ps-'+p,pid:pvid,depth:3,type:'person',name:p,tag:'人员',m:{},hasKids:false}));
+        (prov.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,prov.m,prov.ps.length);rows.push({id:pvid+'-ps-'+p,pid:pvid,depth:3,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
       }
     });
   });
@@ -1552,6 +1604,13 @@ function toggleGroupAll(gid){
   g.fields.forEach(f=>{const k=gid+'.'+f.id;if(allOn)tempCols.delete(k);else tempCols.add(k);});
   renderPanel();
 }
+function toggleOtherGroupAll(){
+  if(!tempCols)return;
+  const otherGs=MG.filter(g=>g.isOther);
+  const allOn=otherGs.every(g=>g.fields.every(f=>tempCols.has(g.id+'.'+f.id)));
+  otherGs.forEach(g=>g.fields.forEach(f=>{const k=g.id+'.'+f.id;if(allOn)tempCols.delete(k);else tempCols.add(k);}));
+  renderPanel();
+}
 
 function renderPanel(){
   const total=MG.reduce((s,g)=>s+g.fields.length,0);
@@ -1564,9 +1623,6 @@ function renderPanel(){
     </div>
     ${['小组','省份','城市小组/城市','人员'].map(n=>`<div class="pg-field disabled"><input type="checkbox" checked disabled><span class="pg-fn">${n}</span></div>`).join('')}
   </div>`;
-  const regularGs=MG.filter(g=>!g.isOther);
-  const otherGs=MG.filter(g=>g.isOther);
-
   function renderGroup(g){
     const allOn=g.fields.every(f=>tempCols.has(g.id+'.'+f.id));
     let s=`<div class="pg-group">
@@ -1584,7 +1640,28 @@ function renderPanel(){
     return s+'</div>';
   }
 
-  MG.forEach(g=>{ html+=renderGroup(g); });
+  MG.filter(g=>!g.isOther).forEach(g=>{ html+=renderGroup(g); });
+
+  // 其他：当前策略 / 需要支持 / 指导建议 合并在一个块里
+  const otherGs=MG.filter(g=>g.isOther);
+  if(otherGs.length){
+    const allOn=otherGs.every(g=>g.fields.every(f=>tempCols.has(g.id+'.'+f.id)));
+    html+=`<div class="pg-group">
+      <div class="pg-gh" onclick="toggleOtherGroupAll()" style="background:#EFF6FF;color:#1D4ED8;">
+        <span>其他</span>
+        <span class="pg-ta">${allOn?'全部取消':'全选'}</span>
+      </div>`;
+    otherGs.forEach(g=>{
+      g.fields.forEach(f=>{
+        const k=g.id+'.'+f.id;const chk=tempCols.has(k);
+        html+=`<div class="pg-field" onclick="toggleField('${k}')">
+          <input type="checkbox" id="cb-${k.replace(/\./g,'_')}" ${chk?'checked':''} onclick="toggleField('${k}',event)">
+          <span class="pg-fn">${g.name}</span>${f.def?'<span class="pg-def">默认</span>':''}
+        </div>`;
+      });
+    });
+    html+='</div>';
+  }
 
   document.getElementById('panelBody').innerHTML=html;
 }
@@ -1743,6 +1820,110 @@ function confirmUploadCourse(){
   closeUploadPickerModal();
   document.getElementById('refTargetInput').click();
 }
+/* ── OLD STUDENT CONFIG ── */
+let osConfigCourseId = null;
+let osConfigProjectId = null;
+let osConfigCourseGrp = COURSE_GROUPS[0].id;
+let osConfigProjectGrp = COURSE_GROUPS[0].id;
+const osConfigMappings = {}; // { courseId: projectId }
+
+function openOldStuConfigModal(){
+  osConfigCourseId = null;
+  osConfigProjectId = null;
+  osConfigCourseGrp = COURSE_GROUPS[0].id;
+  osConfigProjectGrp = COURSE_GROUPS[0].id;
+  document.getElementById('osSelCourseTxt').textContent = '请选择课程';
+  document.getElementById('osSelProjectTxt').textContent = '请选择关联项目';
+  document.getElementById('osSelCourseBtn').classList.remove('open');
+  document.getElementById('osSelProjectBtn').classList.remove('open');
+  document.getElementById('osCourseDrop').classList.remove('show');
+  document.getElementById('osProjectDrop').classList.remove('show');
+  document.getElementById('osProjectSection').style.display = 'none';
+  document.getElementById('oldStuConfigModal').classList.add('show');
+  document.getElementById('oldStuConfigOv').classList.add('show');
+}
+function closeOldStuConfigModal(){
+  document.getElementById('oldStuConfigModal').classList.remove('show');
+  document.getElementById('oldStuConfigOv').classList.remove('show');
+}
+
+function toggleOsCourseDrop(e){
+  e&&e.stopPropagation();
+  const drop = document.getElementById('osCourseDrop');
+  const btn  = document.getElementById('osSelCourseBtn');
+  const open = drop.classList.toggle('show');
+  btn.classList.toggle('open', open);
+  if(open) renderOsCourseCascade();
+}
+function toggleOsProjectDrop(e){
+  e&&e.stopPropagation();
+  const drop = document.getElementById('osProjectDrop');
+  const btn  = document.getElementById('osSelProjectBtn');
+  const open = drop.classList.toggle('show');
+  btn.classList.toggle('open', open);
+  if(open) renderOsProjectCascade();
+}
+
+function renderOsCourseCascade(){
+  const leftEl  = document.getElementById('osCourseLeft');
+  const rightEl = document.getElementById('osCourseRight');
+  leftEl.innerHTML = COURSE_GROUPS.map(g=>`
+    <div class="up-grp-item${g.id===osConfigCourseGrp?' active':''}" onclick="setOsConfigCourseGrp('${g.id}')">
+      <span class="up-course-dot" style="background:${g.color}"></span>${g.name}
+    </div>`).join('');
+  const grp = COURSE_GROUPS.find(g=>g.id===osConfigCourseGrp);
+  rightEl.innerHTML = (grp?.courses||[]).map(c=>`
+    <div class="up-course-item${c.id===osConfigCourseId?' selected':''}" onclick="selectOsConfigCourse('${c.id}','${grp.color}')">
+      <span class="up-course-dot" style="background:${osConfigCourseId===c.id?grp.color:'#CBD5E1'}"></span>${c.name}
+    </div>`).join('');
+}
+function setOsConfigCourseGrp(id){ osConfigCourseGrp=id; renderOsCourseCascade(); }
+function selectOsConfigCourse(id, color){
+  osConfigCourseId = id;
+  const c = COURSES.find(x=>x.id===id);
+  document.getElementById('osSelCourseTxt').textContent = c?.name||'';
+  document.getElementById('osSelCourseBtn').classList.remove('open');
+  document.getElementById('osCourseDrop').classList.remove('show');
+  // show project section with any existing mapping pre-selected
+  const prev = osConfigMappings[id];
+  if(prev){ osConfigProjectId=prev; const p=COURSES.find(x=>x.id===prev); document.getElementById('osSelProjectTxt').textContent=p?.name||'请选择关联项目'; }
+  else { osConfigProjectId=null; document.getElementById('osSelProjectTxt').textContent='请选择关联项目'; }
+  document.getElementById('osProjectSection').style.display = '';
+}
+
+function renderOsProjectCascade(){
+  const leftEl  = document.getElementById('osProjectLeft');
+  const rightEl = document.getElementById('osProjectRight');
+  leftEl.innerHTML = COURSE_GROUPS.map(g=>`
+    <div class="up-grp-item${g.id===osConfigProjectGrp?' active':''}" onclick="setOsConfigProjectGrp('${g.id}')">
+      <span class="up-course-dot" style="background:${g.color}"></span>${g.name}
+    </div>`).join('');
+  const grp = COURSE_GROUPS.find(g=>g.id===osConfigProjectGrp);
+  rightEl.innerHTML = (grp?.courses||[]).map(c=>`
+    <div class="up-course-item${c.id===osConfigProjectId?' selected':''}" onclick="selectOsConfigProject('${c.id}')">
+      <span class="up-course-dot" style="background:${osConfigProjectId===c.id?grp.color:'#CBD5E1'}"></span>${c.name}
+    </div>`).join('');
+}
+function setOsConfigProjectGrp(id){ osConfigProjectGrp=id; renderOsProjectCascade(); }
+function selectOsConfigProject(id){
+  osConfigProjectId = id;
+  const c = COURSES.find(x=>x.id===id);
+  document.getElementById('osSelProjectTxt').textContent = c?.name||'';
+  document.getElementById('osSelProjectBtn').classList.remove('open');
+  document.getElementById('osProjectDrop').classList.remove('show');
+  renderOsProjectCascade();
+}
+
+function saveOldStuConfig(){
+  if(!osConfigCourseId){ showToast('请先选择课程','#D93025'); return; }
+  if(!osConfigProjectId){ showToast('请先选择关联项目','#D93025'); return; }
+  osConfigMappings[osConfigCourseId] = osConfigProjectId;
+  const course  = COURSES.find(c=>c.id===osConfigCourseId);
+  const project = COURSES.find(c=>c.id===osConfigProjectId);
+  closeOldStuConfigModal();
+  showToast(`已配置：${course?.name} → ${project?.name}`,'#059669');
+}
+
 function downloadRefTemplate(){
   const csv=[
     '省份,小组,目标,参考目标',
