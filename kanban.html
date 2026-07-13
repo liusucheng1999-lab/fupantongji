@@ -688,6 +688,7 @@ const MG = [
     {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该主会场且有课程权限数 / 目标'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
     {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该主会场且有课程权限，且缴纳会务费数'},
+    {id:'feeRate',    name:'缴纳会务费率',       def:false, pct:true, tip:'缴纳会务费数/完成'},
     {id:'sign',       name:'签到数',             def:false, tip:'审核到该主会场且有课程权限且签到'},
     {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'审核到该主会场且有课程权限且签到 / 目标'},
    ]},
@@ -698,6 +699,7 @@ const MG = [
     {id:'rate',       name:'完成率',             def:false, pct:true, tip:'审核到该省份分会场且有课程权限数 / 目标数'},
     {id:'gap',        name:'缺口',               def:false, tip:'目标 - 完成'},
     {id:'fee',        name:'缴纳会务费数',       def:false, tip:'审核到该省份分会场且有课程权限，且缴纳会务费数'},
+    {id:'feeRate',    name:'缴纳会务费率',       def:false, pct:true, tip:'缴纳会务费数/完成'},
     {id:'sign',       name:'签到数',             def:false, tip:'审核到该省份分会场且有课程权限且签到'},
     {id:'srate',      name:'签到完成率',         def:false, pct:true, tip:'审核到该省份分会场且有课程权限且签到 / 目标'},
    ]},
@@ -916,6 +918,7 @@ function enrich(m, name) {
   m['zhuA.fee']       = Math.ceil(adone*rng(name,28,0.45,0.75));
   m['zhuA.gap']       = Math.max(0,atgt-adone);
   m['zhuA.srate']     = adone>0 ? m['zhuA.sign']/adone : 0;
+  m['zhuA.feeRate']   = adone>0 ? m['zhuA.fee']/adone : 0;
   // 本省分会场
   const fdone = Math.ceil(done*rng(name,29,0.25,0.55));
   const ftgt  = Math.ceil(fdone/rng(name,30,0.55,0.85));
@@ -926,6 +929,7 @@ function enrich(m, name) {
   m['fen.fee']        = Math.ceil(fdone*rng(name,31,0.5,0.82));
   m['fen.sign']       = Math.ceil(fdone*rng(name,32,0.65,0.92));
   m['fen.srate']      = fdone>0 ? m['fen.sign']/fdone : 0;
+  m['fen.feeRate']    = fdone>0 ? m['fen.fee']/fdone : 0;
 }
 
 function sumM(mList) {
@@ -948,9 +952,9 @@ function sumM(mList) {
   if(r['lao.done']!=null&&r['lao.target']){r['lao.rate']=r['lao.done']/r['lao.target'];r['lao.gap']=Math.max(0,r['lao.target']-r['lao.done']);}
   if(r['lao.sign']&&r['lao.done'])           r['lao.srate']    = r['lao.sign']/r['lao.done'];
   // 主会场A
-  if(r['zhuA.done']!=null&&r['zhuA.target']){r['zhuA.rate']=r['zhuA.done']/r['zhuA.target'];r['zhuA.gap']=Math.max(0,r['zhuA.target']-r['zhuA.done']);r['zhuA.srate']=r['zhuA.done']>0?r['zhuA.sign']/r['zhuA.done']:0;}
+  if(r['zhuA.done']!=null&&r['zhuA.target']){r['zhuA.rate']=r['zhuA.done']/r['zhuA.target'];r['zhuA.gap']=Math.max(0,r['zhuA.target']-r['zhuA.done']);r['zhuA.srate']=r['zhuA.done']>0?r['zhuA.sign']/r['zhuA.done']:0;r['zhuA.feeRate']=r['zhuA.done']>0?r['zhuA.fee']/r['zhuA.done']:0;}
   // 本省分会场
-  if(r['fen.done']!=null&&r['fen.target']){r['fen.rate']=r['fen.done']/r['fen.target'];r['fen.gap']=Math.max(0,r['fen.target']-r['fen.done']);r['fen.srate']=r['fen.done']>0?r['fen.sign']/r['fen.done']:0;}
+  if(r['fen.done']!=null&&r['fen.target']){r['fen.rate']=r['fen.done']/r['fen.target'];r['fen.gap']=Math.max(0,r['fen.target']-r['fen.done']);r['fen.srate']=r['fen.done']>0?r['fen.sign']/r['fen.done']:0;r['fen.feeRate']=r['fen.done']>0?r['fen.fee']/r['fen.done']:0;}
   return r;
 }
 
@@ -995,7 +999,7 @@ function getCourseVal(courseId, row, key) {
   if(base == null) return base;
   if(typeof base !== 'number') return base;
   const sc = COURSE_SCALES[courseId] || {cnt:1, rAdj:0};
-  const isRate = /rate|mom|trate|srate|nrate/.test(key);
+  const isRate = /rate|mom|trate|srate|nrate/i.test(key);
   const jitter = rng(courseId + row.id + key, 77, 0, 1);
   if(isRate) {
     return Math.min(1, Math.max(0, base + sc.rAdj + (jitter - 0.5) * 0.08));
