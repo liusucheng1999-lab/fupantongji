@@ -161,9 +161,17 @@ thead{position:sticky;top:0;z-index:30}
   border-bottom:1px solid var(--bdr);
 }
 .th-name-inner{padding:6px 14px 4px;color:var(--txt2);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.exp-row{display:flex;gap:3px;align-items:center;padding:0 10px 5px;flex-wrap:nowrap}
-.exp-btn{font-size:10px;padding:1px 6px;border-radius:8px;cursor:pointer;background:#fff;color:var(--txt2);border:1px solid var(--bdr);transition:all .12s;font-family:inherit;font-weight:500;white-space:nowrap}
-.exp-btn:hover{background:var(--pri-l);color:var(--pri);border-color:rgba(61,90,254,.3)}
+.th-adv-wrap{
+  position:sticky;left:250px;z-index:40;
+  background:#F8FAFB;border-right:1px solid var(--bdr);
+  min-width:120px;width:120px;
+  border-top:2px solid transparent;
+  border-bottom:1px solid var(--bdr);
+}
+.th-adv-inner{padding:6px 12px;color:var(--txt2);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.th-sort{display:inline-flex;align-items:center;justify-content:center;min-width:13px;height:13px;color:inherit;font-size:10px;font-weight:700;cursor:pointer;margin-left:4px;flex-shrink:0;vertical-align:middle;opacity:.5;font-family:inherit;user-select:none}
+.th-sort:hover{opacity:1}
+.th-sort.active{opacity:1;color:var(--pri)}
 
 /* ══ ROWS ══ */
 @keyframes rowIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
@@ -226,6 +234,12 @@ td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,
   border-right:1px solid var(--bdr)!important;
 }
 .td-name-inner{display:flex;align-items:center;gap:6px;padding:5px 12px;overflow:hidden;max-width:250px}
+.td-adv-wrap{
+  position:sticky;left:250px;z-index:10;
+  min-width:120px;width:120px;
+  border-right:1px solid var(--bdr)!important;
+}
+.td-adv-inner{padding:5px 12px;font-size:12px;color:var(--txt2);line-height:1.35;white-space:normal;word-break:break-word}
 .tog{flex-shrink:0;width:16px;height:16px;border-radius:4px;border:1px solid;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9px;transition:all .12s;line-height:1;background:#fff;font-weight:700}
 .tog:hover{opacity:.7}.tog.leaf{visibility:hidden;pointer-events:none}
 .lv-bar{width:2px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:12px;opacity:.7}
@@ -499,6 +513,10 @@ td:hover .td-tc-sub{opacity:1}
         <button class="tc-area-btn" id="myAreaBtn" onclick="toggleMyAreas()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span class="ma-label">只看我负责的地区</span>
+        </button>
+        <button class="tc-area-btn" id="provOnlyBtn" onclick="toggleProvinceOnly()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          <span class="pa-label">只看省份</span>
         </button>
       </div>
       <div class="table-scroll" id="tableScroll">
@@ -1098,6 +1116,8 @@ MG.forEach(g=>g.fields.forEach(f=>{if(f.def)visibleCols.add(g.id+'.'+f.id)}));
 let tempCols = null;
 let CURRENT_USER = '';
 let filterMode   = false;
+let provinceOnlyMode = false;
+let sortSpec = null; // {courseId, gid, fid, dir}
 
 /* text data store: rowId → { 'strategy.val': '...', 'support.val': '...', 'guide.val': '...' } */
 const textStore = {};
@@ -1267,34 +1287,34 @@ const LV_INDENT =[0,0,14,26,38,50];
 function buildRows() {
   const rows=[];
   const byDone=(a,b)=>((b.m&&b.m['xin.done'])||0)-((a.m&&a.m['xin.done'])||0);
-  rows.push({id:'root',pid:null,depth:0,type:'total',name:'总计',tag:'汇总',m:RAW.m,hasKids:true});
+  rows.push({id:'root',pid:null,depth:0,type:'total',name:'总计',tag:'汇总',m:RAW.m,hasKids:true,advisors:[]});
   [...RAW.groups].sort(byDone).forEach(g=>{
     const gid='g-'+g.name;
-    rows.push({id:gid,pid:'root',depth:1,type:'group',name:g.name,tag:'小组',m:g.m,hasKids:g.provinces.length>0});
+    rows.push({id:gid,pid:'root',depth:1,type:'group',name:g.name,tag:'小组',m:g.m,hasKids:g.provinces.length>0,advisors:[]});
     [...g.provinces].sort(byDone).forEach(prov=>{
       const pvid=gid+'-p-'+prov.name;
       const hasCG=prov.cg&&prov.cg.length>0;
       const hasPS=prov.ps&&prov.ps.length>0;
-      rows.push({id:pvid,pid:gid,depth:2,type:'province',name:prov.name,tag:'省份',m:prov.m,hasKids:hasCG||hasPS});
+      rows.push({id:pvid,pid:gid,depth:2,type:'province',name:prov.name,tag:'省份',m:prov.m,hasKids:hasCG||hasPS,advisors:hasCG?[]:(prov.ps||[])});
       if(hasCG){
         [...prov.cg].sort(byDone).forEach(cg=>{
           const cgid=pvid+'-cg-'+cg.name;
           const hasSub=cg.sub&&cg.sub.length>0;
           const hasCGPS=cg.ps&&cg.ps.length>0;
-          rows.push({id:cgid,pid:pvid,depth:3,type:'citygroup',name:cg.name,tag:'城市组',m:cg.m,hasKids:hasSub||hasCGPS});
+          rows.push({id:cgid,pid:pvid,depth:3,type:'citygroup',name:cg.name,tag:'城市组',m:cg.m,hasKids:hasSub||hasCGPS,advisors:hasSub?[]:(cg.ps||[])});
           if(hasSub){
             [...cg.sub].sort(byDone).forEach(sc=>{
               const scid=cgid+'-sc-'+sc.name;
               const hasSCPS=sc.ps&&sc.ps.length>0;
-              rows.push({id:scid,pid:cgid,depth:4,type:'city',name:sc.name,tag:'城市',m:sc.m,hasKids:hasSCPS});
-              (sc.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,sc.m,sc.ps.length);rows.push({id:scid+'-ps-'+p,pid:scid,depth:5,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
+              rows.push({id:scid,pid:cgid,depth:4,type:'city',name:sc.name,tag:'城市',m:sc.m,hasKids:hasSCPS,advisors:sc.ps||[]});
+              (sc.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,sc.m,sc.ps.length);rows.push({id:scid+'-ps-'+p,pid:scid,depth:5,type:'person',name:p,tag:'人员',m:pm,hasKids:false,advisors:[]});});
             });
           } else {
-            (cg.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,cg.m,cg.ps.length);rows.push({id:cgid+'-ps-'+p,pid:cgid,depth:4,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
+            (cg.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,cg.m,cg.ps.length);rows.push({id:cgid+'-ps-'+p,pid:cgid,depth:4,type:'person',name:p,tag:'人员',m:pm,hasKids:false,advisors:[]});});
           }
         });
       } else if(hasPS){
-        (prov.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,prov.m,prov.ps.length);rows.push({id:pvid+'-ps-'+p,pid:pvid,depth:3,type:'person',name:p,tag:'人员',m:pm,hasKids:false});});
+        (prov.ps||[]).forEach(p=>{const pm={};enrichPerson(pm,p,prov.m,prov.ps.length);rows.push({id:pvid+'-ps-'+p,pid:pvid,depth:3,type:'person',name:p,tag:'人员',m:pm,hasKids:false,advisors:[]});});
       }
     });
   });
@@ -1307,6 +1327,47 @@ function isVisible(row){
   if(!expanded.has(row.pid)) return false;
   const par=ALL.find(r=>r.id===row.pid);
   return par?isVisible(par):false;
+}
+
+/* ══ SORT ══ */
+function getRenderRows(){
+  if(!sortSpec&&!provinceOnlyMode) return ALL;
+  const childrenByPid={};
+  ALL.forEach(r=>{
+    let pk=r.pid==null?'__root__':r.pid;
+    /* when only showing provinces, treat them as direct siblings under root so
+       sort/order isn't scoped to their (hidden) 小组 parent */
+    if(provinceOnlyMode&&r.type==='province') pk='root';
+    (childrenByPid[pk]=childrenByPid[pk]||[]).push(r);
+  });
+  let cmp=null;
+  if(sortSpec){
+    const {courseId,gid,fid,dir}=sortSpec;
+    const key=gid+'.'+fid;
+    cmp=(a,b)=>{
+      const av=getCourseVal(courseId,a,key), bv=getCourseVal(courseId,b,key);
+      const an=(typeof av==='number')?av:-Infinity;
+      const bn=(typeof bv==='number')?bv:-Infinity;
+      return dir==='asc'?(an-bn):(bn-an);
+    };
+  }
+  const out=[];
+  function visit(pk){
+    const kids=cmp?[...(childrenByPid[pk]||[])].sort(cmp):(childrenByPid[pk]||[]);
+    kids.forEach(k=>{ out.push(k); visit(k.id); });
+  }
+  visit('__root__');
+  return out;
+}
+function toggleSort(courseId,gid,fid,e){
+  if(e) e.stopPropagation();
+  if(sortSpec&&sortSpec.courseId===courseId&&sortSpec.gid===gid&&sortSpec.fid===fid){
+    sortSpec = sortSpec.dir==='desc' ? {courseId,gid,fid,dir:'asc'} : null;
+  } else {
+    sortSpec={courseId,gid,fid,dir:'desc'};
+  }
+  renderHead();
+  renderBody();
 }
 
 /* ══ FILTER: MY AREAS ══ */
@@ -1388,6 +1449,12 @@ function toggleMyAreas() {
 }
 
 /* ══ RENDER HEAD ══ */
+function fieldSortHtml(course,g,f){
+  if(f.id!=='done'&&f.id!=='rate') return '';
+  const active=sortSpec&&sortSpec.courseId===course.id&&sortSpec.gid===g.id&&sortSpec.fid===f.id;
+  const arrow=active?(sortSpec.dir==='asc'?'↑':'↓'):'⇅';
+  return `<span class="th-sort${active?' active':''}" onclick="toggleSort('${course.id}','${g.id}','${f.id}',event)" title="排序">${arrow}</span>`;
+}
 function getVisCols(){
   const cols=[];
   MG.forEach(g=>g.fields.forEach(f=>{
@@ -1411,18 +1478,15 @@ function renderHead(){
 
   const nameTh=`<th class="th-cat th-name-wrap" rowspan="${multi?3:2}">
     <div class="th-name-inner">组织架构</div>
-    <div class="exp-row">
-      <span class="exp-btn" onclick="expandToDepth(1)">小组</span>
-      <span class="exp-btn" onclick="expandToDepth(2)">省份</span>
-      <span class="exp-btn" onclick="expandToDepth(3)">城市组</span>
-      <span class="exp-btn" onclick="expandToDepth(4)">人员</span>
-    </div>
+  </th>`;
+  const advTh=`<th class="th-cat th-adv-wrap" rowspan="${multi?3:2}">
+    <div class="th-adv-inner">成长顾问</div>
   </th>`;
 
   let html='';
   if(multi){
     /* Row 0 — course name spans */
-    html+=`<tr>${nameTh}`;
+    html+=`<tr>${nameTh}${advTh}`;
     activeCourses.forEach((course,ci)=>{
       const isLast=ci===activeCourses.length-1;
       html+=`<th class="th-course" colspan="${totalCols}"
@@ -1461,13 +1525,14 @@ function renderHead(){
         const sep=(isLastF&&!isLastCourse)?'border-right:2px solid var(--bdr2)!important;':'';
         const label=g.isOther?g.name:f.name;
         const tipHtml=f.tip?`<i class="th-tip" data-tip="${f.tip.replace(/"/g,'&quot;')}">?</i>`:'';
-        html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}${sep}">${label}${tipHtml}</th>`;
+        const sortHtml=fieldSortHtml(course,g,f);
+        html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}${sep}">${label}${tipHtml}${sortHtml}</th>`;
       });
     });
     html+='</tr>';
   } else {
     /* Single course — standard 2-row (other groups merged into 其他) */
-    html+=`<tr>${nameTh}`;
+    html+=`<tr>${nameTh}${advTh}`;
     let gi2=0;
     while(gi2<catGrps.length){
       const {g,count}=catGrps[gi2];
@@ -1482,10 +1547,12 @@ function renderHead(){
       }
     }
     html+='</tr><tr>';
+    const soloCourse=activeCourses[0];
     cols.forEach(({g,f})=>{
       const label=g.isOther?g.name:f.name;
       const tipHtml=f.tip?`<i class="th-tip" data-tip="${f.tip.replace(/"/g,'&quot;')}">?</i>`:'';
-      html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}">${label}${tipHtml}</th>`;
+      const sortHtml=fieldSortHtml(soloCourse,g,f);
+      html+=`<th class="th-field${f.def?' is-def':''}${f.isText?' is-txt':''}" style="background:${g.fgBg};color:${g.fgColor}66;${f.isText?'min-width:140px;':''}">${label}${tipHtml}${sortHtml}</th>`;
     });
     html+='</tr>';
   }
@@ -1517,7 +1584,7 @@ function renderBody(){
   });
 
   let html='';
-  ALL.forEach(row=>{
+  getRenderRows().forEach(row=>{
     const vis=isVisible(row);
     const isExp=expanded.has(row.id);
     const isPerson=row.type==='person';
@@ -1529,8 +1596,9 @@ function renderBody(){
       if(!myOwned.has(row.id)&&!myAnc.has(row.id)) filterHide=true;
       if(myAnc&&myAnc.has(row.id)&&!myOwned.has(row.id)) isAnc=true;
     }
+    const groupHide=provinceOnlyMode&&row.type==='group';
 
-    const cls=`rl${Math.min(row.depth,5)}${isPerson?' row-person':''}${vis?'':' row-hide'}${filterHide?' row-hide':''}${isAnc?' row-anc':''}`;
+    const cls=`rl${Math.min(row.depth,5)}${isPerson?' row-person':''}${vis?'':' row-hide'}${filterHide?' row-hide':''}${groupHide?' row-hide':''}${isAnc?' row-anc':''}`;
     html+=`<tr class="${cls}" data-id="${row.id}">`;
     html+=`<td class="td-name-wrap">
       <div class="td-name-inner" style="padding-left:${8+indent}px;">
@@ -1540,6 +1608,8 @@ function renderBody(){
         <span class="row-lbl" data-tip="${row.name}">${row.name}</span>
       </div>
     </td>`;
+    const advTxt=(row.advisors&&row.advisors.length)?row.advisors.join('、'):'—';
+    html+=`<td class="td-adv-wrap"><div class="td-adv-inner" data-tip="${advTxt}">${advTxt}</div></td>`;
 
     /* repeat metric columns for each selected course */
     activeCourses.forEach((course,ci)=>{
@@ -1645,9 +1715,16 @@ function toggleRow(id){
   renderBody();
 }
 function collapseDesc(id){ALL.forEach(r=>{if(r.pid===id){collapseDesc(r.id);expanded.delete(r.id);}})}
-function expandToDepth(maxD){
-  expanded.clear();
-  ALL.forEach(r=>{if(r.depth<maxD&&r.hasKids)expanded.add(r.id);});
+function toggleProvinceOnly(){
+  provinceOnlyMode=!provinceOnlyMode;
+  const btn=document.getElementById('provOnlyBtn');
+  btn.classList.toggle('active',provinceOnlyMode);
+  const lbl=btn.querySelector('.pa-label');
+  if(lbl) lbl.textContent=provinceOnlyMode?'查看全部层级':'只看省份';
+  if(provinceOnlyMode){
+    expanded.clear();
+    ALL.forEach(r=>{if(r.depth<2&&r.hasKids)expanded.add(r.id);});
+  }
   renderBody();
 }
 
