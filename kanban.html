@@ -231,7 +231,6 @@ td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,
 .lv-bar{width:2px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:12px;opacity:.7}
 .row-person .lv-bar{display:none}
 .row-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.row-tag{flex-shrink:0;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600;letter-spacing:.03em}
 
 /* Row label styles per level */
 .rl0 .row-lbl{color:#6B4D00;font-size:13px;font-weight:700;letter-spacing:.01em}
@@ -240,14 +239,6 @@ td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,
 .rl3 .row-lbl{color:#3D4E68;font-weight:400}
 .rl4 .row-lbl{color:#5A6A82;font-weight:400}
 .row-person .row-lbl{color:var(--txt);font-weight:400}
-
-/* Row tags */
-.rl0 .row-tag{background:#FEF3C7;color:#92400E}
-.rl1 .row-tag{background:#EEF0FF;color:#3D5AFE}
-.rl2 .row-tag{background:#F0F3FF;color:#4C62C8}
-.rl3 .row-tag{background:#F0FDF9;color:#059669}
-.rl4 .row-tag{background:#FFF4ED;color:#C4571A}
-.row-person .row-tag{background:#F5F5F5;color:#888}
 
 /* ══ COL SETTINGS PANEL ══ */
 .col-overlay{position:fixed;inset:0;background:rgba(17,24,39,.25);backdrop-filter:blur(1px);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -1547,7 +1538,6 @@ function renderBody(){
           style="color:${c};border-color:${c}50;">${row.hasKids?(isExp?'−':'+'):'·'}</span>
         <span class="lv-bar" style="background:${c};opacity:.65;"></span>
         <span class="row-lbl" data-tip="${row.name}">${row.name}</span>
-        <span class="row-tag" style="background:${c}20;color:${c};">${row.tag}</span>
       </div>
     </td>`;
 
