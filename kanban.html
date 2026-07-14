@@ -267,7 +267,6 @@ td{border-bottom:1px solid rgba(228,233,242,.8);border-right:1px solid rgba(228,
 /* ══ AI 分析面板（界面示意） ══ */
 .ai-panel{position:fixed;top:0;right:0;width:440px;max-width:94vw;height:100vh;background:var(--sfc);z-index:201;display:flex;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,.1);transform:translateX(100%);transition:transform .24s cubic-bezier(.22,.8,.25,1)}
 .ai-panel.show{transform:translateX(0)}
-.ai-scope-tag{font-size:11px;color:var(--txt2);background:var(--bg);border:1px solid var(--bdr);border-radius:20px;padding:2px 10px;white-space:nowrap}
 
 .ai-spec{border-bottom:1px solid var(--bdr);background:#FFFBEB;flex-shrink:0}
 .ai-spec summary{cursor:pointer;padding:10px 20px;font-size:12px;font-weight:600;color:#92400E;list-style:none;user-select:none}
@@ -541,7 +540,6 @@ td:hover .td-tc-sub{opacity:1}
 <div class="ai-panel" id="aiPanel">
   <div class="panel-head">
     <span class="panel-title">AI 分析</span>
-    <span class="ai-scope-tag">战略领导力第20期 · 全国视图</span>
     <button class="panel-close" onclick="closeAiPanel()">✕</button>
   </div>
 
@@ -554,27 +552,14 @@ td:hover .td-tc-sub{opacity:1}
       </div>
       <div class="ai-spec-sec">
         <div class="ai-spec-h">用户消息模板（静默发送，不展示气泡）</div>
-        <pre class="ai-spec-pre">我是{姓名}，是{部门名称}的成长顾问负责人。以下是所有的业绩数据及业绩说明。
+        <pre class="ai-spec-pre">我是{姓名}，是{部门名称}的成长顾问负责人。以下是所有的业绩数据。
 业绩数据：{当前视图导出数据}
-业绩说明：{当前显示字段的口径说明}
 请你帮我进行分析、给我提建议。</pre>
         <ul class="ai-spec-list">
           <li><b>{姓名}</b>：当前登录用户（侧边栏"当前用户"选择器的值）</li>
           <li><b>{部门名称}</b>：取当前登录用户所属的、<b>角色为"成长顾问"</b>的所有部门名称（一人可能同时属于多个部门，只取其"成长顾问"角色对应的部门，其他角色的部门不算；多个则拼接列出）</li>
           <li><b>{当前视图导出数据}</b>：复用「导出」功能的同一份数据源（当前课程选择、列设置、"只看我负责的地区"筛选后的结果），序列化为纯文本表格（Markdown / CSV），需保留层级树形结构</li>
-          <li><b>{当前显示字段的口径说明}</b>：仅取当前「列设置」中勾选显示的字段对应的口径说明文案，未显示的字段不发送</li>
         </ul>
-      </div>
-      <div class="ai-spec-sec">
-        <div class="ai-spec-h">系统提示词</div>
-        <pre class="ai-spec-pre">你是一位数据分析师，专注于润泽园教育公司学员招募业务的复盘分析，为我公司的成长顾问提供建议。
-你会收到一份多层级（总计/小组/省份/城市组/人员）的业绩数据表和对应字段口径说明。
-
-请遵循：
-1. 只基于用户提供的数据做判断，不得编造未出现的数字或结论；数据不足以支撑的地方要明确说明"数据不足，无法判断"。
-2. 输出结构固定为四部分：① 整体结论（1-2 句话概括达标情况）② 亮点（表现好的小组/省份，说明原因）③ 风险点（缺口大、完成率低、或掉队的小组/省份/人员，按严重程度排序）④ 行动建议（3-5 条具体、可执行、能落实到"谁在什么时间做什么"的建议，不要泛泛而谈）。
-3. 语言简洁、口语化、避免堆砌术语，结构清晰，除非用户追问要求展开，否则控制在 500 字以内。
-4. 涉及具体人员/省份时直接点名，不要笼统带过。</pre>
       </div>
     </div>
   </details>
